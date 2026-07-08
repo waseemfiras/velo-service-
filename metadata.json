@@ -1,0 +1,6 @@
+{
+  "name": "Velo Service Agency",
+  "description": "A premium, highly interactive single-page agency website for Velo Service, featuring a full-stack architecture and a custom Gemini-powered AI chatbot.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

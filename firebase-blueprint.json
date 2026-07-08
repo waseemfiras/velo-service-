@@ -1,0 +1,82 @@
+{
+  "entities": {
+    "GlobalStats": {
+      "title": "GlobalStats",
+      "description": "Global visitor statistics.",
+      "type": "object",
+      "properties": {
+        "total_visitors": { "type": "number" },
+        "last_visit": { "type": "object" }
+      }
+    },
+    "GlobalConfig": {
+      "title": "GlobalConfig",
+      "description": "Global application configuration.",
+      "type": "object",
+      "properties": {
+        "ai_chat_enabled": { "type": "boolean" },
+        "maintenance_mode": { "type": "boolean" },
+        "maintenance_message": { "type": "string" }
+      }
+    },
+    "ServiceRequest": {
+      "title": "ServiceRequest",
+      "description": "Custom project service request with tracking details.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "company": { "type": "string" },
+        "projectTitle": { "type": "string" },
+        "selectedService": { "type": "string" },
+        "estimatedBudget": { "type": "string" },
+        "preferredTimeline": { "type": "string" },
+        "country": { "type": "string" },
+        "projectDescription": { "type": "string" },
+        "referenceLinks": { "type": "string" },
+        "additionalNotes": { "type": "string" },
+        "attachmentName": { "type": "string" },
+        "attachmentType": { "type": "string" },
+        "attachmentData": { "type": "string" },
+        "preferredContactMethod": { "type": "string" },
+        "status": { "type": "string" },
+        "latestUpdate": { "type": "string" },
+        "assignedTeam": { "type": "string" },
+        "estimatedDelivery": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "fullName", "email", "projectTitle", "selectedService", "estimatedBudget", "preferredTimeline", "projectDescription", "preferredContactMethod", "status"]
+    },
+    "UserChats": {
+      "title": "UserChats",
+      "description": "Stored chat sessions for a specific user.",
+      "type": "object",
+      "properties": {
+        "sessions": { "type": "array" },
+        "currentSessionId": { "type": "string" }
+      },
+      "required": ["sessions", "currentSessionId"]
+    }
+  },
+  "firestore": {
+    "analytics/{docId}": {
+      "schema": "GlobalStats",
+      "description": "Analytics tracking"
+    },
+    "settings/{docId}": {
+      "schema": "GlobalConfig",
+      "description": "Settings configuration"
+    },
+    "service_requests/{requestId}": {
+      "schema": "ServiceRequest",
+      "description": "Collection of all submitted service requests"
+    },
+    "user_chats/{userId}": {
+      "schema": "UserChats",
+      "description": "User's stored chat sessions"
+    }
+  }
+}

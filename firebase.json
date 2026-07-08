@@ -1,0 +1,8 @@
+{
+  "firestore": [
+    {
+      "database": "ai-studio-veloservicedigit-0d3d2259-9b15-4535-975a-380407dc70bf",
+      "rules": "firestore.rules"
+    }
+  ]
+}

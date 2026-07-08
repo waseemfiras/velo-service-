@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for validating collection-specific document IDs
+    function isValidServiceRequestId(id) {
+      return id is string && id.size() <= 64;
+    }
+
+    function isValidUserDocId(id) {
+      return id is string && id.size() <= 128;
+    }
+
+    function isValidReportDocId(id) {
+      return id is string && id.size() <= 128;
+    }
+
+    function isValidUserChats(data) {
+      return data.keys().hasAll(['sessions', 'currentSessionId'])
+          && data.keys().size() == 2
+          && data.sessions is list
+          && data.currentSessionId is string;
+    }
+
+    // User Chats Collection Rules
+    match /user_chats/{userId} {
+      allow read, write: if true;
+    }
+
+    // Service Requests Collection Rules
+    match /service_requests/{requestId} {
+      allow create: if true;
+      allow get: if true;
+      allow list: if true;
+      allow update: if true;
+      allow delete: if true;
+    }
+
+    // Custom Users Sync Rules
+    match /custom_users/{userId} {
+      allow read, write: if true;
+    }
+
+    // Custom Reports / Feedback Rules
+    match /custom_reports/{reportId} {
+      allow read, write: if true;
+    }
+
+    // Settings Collection Rules
+    match /settings/{settingId} {
+      allow read, write: if settingId == 'global_config';
+    }
+
+    // Analytics Collection Rules
+    match /analytics/{analyticId} {
+      allow read, write: if analyticId == 'global_stats';
+    }
+  }
+}

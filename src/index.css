@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-velo-black: #08090A;
+  --color-velo-gray: #1A1C1E;
+  --color-velo-border: #2A2D31;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-velo-black);
+  color: white;
+  font-family: var(--font-sans);
+}
+
+/* Hide default cursor only when custom cursor is active */
+@media (pointer: fine) {
+  body.custom-cursor-active,
+  body.custom-cursor-active * {
+    cursor: none !important;
+  }
+}
+
+/* Fallback for touch devices to show cursor */
+@media (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+}
+
+a, button, input, textarea {
+  /* Default cursor will be used */
+}
+
+@media (pointer: coarse) {
+  a, button, input, textarea {
+    cursor: pointer;
+  }
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
