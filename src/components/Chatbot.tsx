@@ -82,6 +82,16 @@ export function Chatbot() {
     setIsSidebarOpen(false);
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      scrollToBottom();
+      // If we want it to open a new chat every time it's opened
+      if (sessions.length === 0 || (sessions[0] && sessions[0].messages.length > 1)) {
+        handleCreateSession();
+      }
+    }
+  }, [isOpen]);
+
   const handleRenameSession = (id: string, newTitle: string) => {
     if (!newTitle.trim()) return;
     setSessions(prev => prev.map(s => s.id === id ? { ...s, title: newTitle.trim() } : s));
@@ -403,6 +413,13 @@ export function Chatbot() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1 relative z-10">
+                  <button
+                    onClick={handleCreateSession}
+                    className="hover-target p-2 text-white/50 hover:text-white hover:bg-white/10 rounded-full transition-colors flex items-center justify-center"
+                    title="New Chat"
+                  >
+                    <Plus className="w-4.5 h-4.5" />
+                  </button>
                   <Link
                     to="/chat"
                     onClick={() => setIsOpen(false)}

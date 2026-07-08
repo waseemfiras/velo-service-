@@ -11,6 +11,7 @@ import { Home } from './pages/Home';
 import { FullChat } from './pages/FullChat';
 import { SettingsPage } from './pages/SettingsPage';
 import { RequestService } from './pages/RequestService';
+import { Founder } from './pages/Founder';
 import { CustomCursor } from './components/CustomCursor';
 import { AuthProvider } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -37,6 +38,7 @@ function AnimatedRoutes() {
           <Route path="/chat" element={<FullChat />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/request-service" element={<RequestService />} />
+          <Route path="/founder" element={<Founder />} />
           <Route path="/track-request" element={<Navigate to="/request-service?tab=track" replace />} />
           <Route path="/dashboard" element={<Navigate to="/request-service?tab=dashboard" replace />} />
         </Routes>

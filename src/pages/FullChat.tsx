@@ -45,11 +45,13 @@ export function FullChat() {
   useEffect(() => {
     if (!sessionsLoading && !hasInitializedNewSessionRef.current) {
       hasInitializedNewSessionRef.current = true;
-      if (sessions.length > 0 && !currentSessionId) {
+      if (sessions.length === 0 || (sessions[0] && sessions[0].messages.length > 1)) {
+        startNewSession();
+      } else {
         setCurrentSessionId(sessions[0].id);
       }
     }
-  }, [sessionsLoading, sessions, currentSessionId, setCurrentSessionId]);
+  }, [sessionsLoading, sessions, setCurrentSessionId]);
 
   const currentSession = sessions.find(s => s.id === currentSessionId) || sessions[0];
   const messages = currentSession?.messages || [];
@@ -384,6 +386,13 @@ export function FullChat() {
           </div>
 
           <div className="flex items-center gap-3 justify-end">
+            <button
+              onClick={startNewSession}
+              className="p-2 bg-white/5 hover:bg-white/10 text-white rounded-full transition-colors"
+              title="New Chat"
+            >
+              <Plus className="w-5 h-5" />
+            </button>
             <span className="font-display font-bold tracking-wider text-sm hidden sm:inline-block text-white/90">Velo Assistant</span>
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-velo-black flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.2)]">
               <VeloLogo className="w-5 h-5 sm:w-6 sm:h-6" />

@@ -74,6 +74,11 @@ export function Navbar() {
               </Link>
             </Magnetic>
             <Magnetic intensity={0.2}>
+              <Link to="/founder" className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1">
+                Our Team
+              </Link>
+            </Magnetic>
+            <Magnetic intensity={0.2}>
               <Link to="/chat" className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1">
                 {t('aiChat')}
               </Link>
@@ -168,6 +173,13 @@ export function Navbar() {
                 className="text-lg font-display font-medium text-emerald-400 hover:text-emerald-300 border-b border-white/5 pb-3"
               >
                 {t('requestService')}
+              </Link>
+              <Link 
+                to="/founder" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-lg font-display font-medium text-white/80 hover:text-white border-b border-white/5 pb-3"
+              >
+                Our Team
               </Link>
               <Link 
                 to="/chat" 
