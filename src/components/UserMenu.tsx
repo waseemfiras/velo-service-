@@ -56,7 +56,7 @@ export function UserMenu({ onOpenSettings, onOpenReport, onOpenAdmin }: UserMenu
               animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
               exit={{ opacity: 0, y: 15, scale: 0.95, filter: 'blur(8px)' }}
               transition={{ duration: 0.4, type: 'spring', bounce: 0.4 }}
-              className="absolute right-0 top-14 w-64 bg-[#1a1a1a] border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden"
+              className="absolute right-0 rtl:right-auto rtl:left-0 top-14 w-64 bg-[#1a1a1a] border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden text-left rtl:text-right"
             >
               <div className="p-4 border-b border-white/10">
                 <p className="text-white font-medium truncate">{user.displayName || 'User'}</p>

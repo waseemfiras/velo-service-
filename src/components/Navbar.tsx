@@ -55,11 +55,12 @@ export function Navbar() {
           hidden: { y: "-100%", opacity: 0 },
         }}
         transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-40 px-6 py-4 flex items-center justify-between"
+        className="fixed top-0 left-0 right-0 z-40 flex flex-col"
       >
         <div className="absolute inset-0 bg-velo-black/50 backdrop-blur-md border-b border-white/10" />
         
-        <div className="relative max-w-7xl mx-auto w-full flex items-center justify-between">
+        {/* Main Navbar */}
+        <div className="relative px-6 py-4 flex items-center justify-between w-full max-w-7xl mx-auto">
           <Magnetic intensity={0.1}>
             <Link to="/" className="font-display font-bold text-2xl tracking-tighter hover-target inline-block">
               VELO<span className="text-white/50">SERVICE</span>
@@ -75,7 +76,7 @@ export function Navbar() {
             </Magnetic>
             <Magnetic intensity={0.2}>
               <Link to="/founder" className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1">
-                Our Team
+                {language === 'ar' ? 'فريقنا' : 'Our Team'}
               </Link>
             </Magnetic>
             <Magnetic intensity={0.2}>
@@ -139,7 +140,36 @@ export function Navbar() {
             </button>
           </div>
         </div>
+        
       </motion.nav>
+
+      {/* Floating Bottom Navigation Bar for Mobile */}
+      <motion.div 
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.8, type: "spring" }}
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 lg:hidden w-[90%] max-w-sm"
+      >
+        <div className="bg-velo-black/80 backdrop-blur-xl border border-white/10 rounded-full p-2 flex items-center justify-between shadow-[0_10px_40px_rgba(0,0,0,0.8)] shadow-black">
+          <Link to="/chat" className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors relative group">
+            <div className="relative">
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
+            </div>
+            <span className="text-[10px] font-medium">{t('aiChat')}</span>
+          </Link>
+          <div className="w-px h-8 bg-white/10" />
+          <Link to="/request-service" className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-emerald-400 hover:text-emerald-300 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+            <span className="text-[10px] font-medium">{t('requestService')}</span>
+          </Link>
+          <div className="w-px h-8 bg-white/10" />
+          <a href="/#contact" className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <span className="text-[10px] font-medium">{t('contact')}</span>
+          </a>
+        </div>
+      </motion.div>
 
       {/* Mobile Menu Drawer */}
       <AnimatePresence>
@@ -168,25 +198,11 @@ export function Navbar() {
                 {t('services')}
               </a>
               <Link 
-                to="/request-service" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-lg font-display font-medium text-emerald-400 hover:text-emerald-300 border-b border-white/5 pb-3"
-              >
-                {t('requestService')}
-              </Link>
-              <Link 
                 to="/founder" 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-lg font-display font-medium text-white/80 hover:text-white border-b border-white/5 pb-3"
               >
-                Our Team
-              </Link>
-              <Link 
-                to="/chat" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-lg font-display font-medium text-white/80 hover:text-white border-b border-white/5 pb-3"
-              >
-                {t('aiChat')}
+                {language === 'ar' ? 'فريقنا' : 'Our Team'}
               </Link>
               <a 
                 href="/#work" 
@@ -194,13 +210,6 @@ export function Navbar() {
                 className="text-lg font-display font-medium text-white/80 hover:text-white border-b border-white/5 pb-3"
               >
                 {t('work')}
-              </a>
-              <a 
-                href="/#contact" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-lg font-display font-medium text-white/80 hover:text-white border-b border-white/5 pb-3"
-              >
-                {t('contact')}
               </a>
             </div>
 

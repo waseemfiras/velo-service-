@@ -32,7 +32,7 @@ export function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <section ref={ref} className="relative min-h-screen flex flex-col justify-center px-6 pt-20 overflow-hidden bg-velo-black">
+    <section ref={ref} className="relative min-h-screen flex flex-col justify-center px-6 pt-32 lg:pt-20 overflow-hidden bg-velo-black">
       {/* Smart Video Background */}
       <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
         <motion.div

@@ -1,8 +1,9 @@
 import { motion, useScroll, useTransform } from "motion/react";
-import { ArrowLeft, Github, Linkedin, Mail, Code, Zap, Lightbulb } from "lucide-react";
+import { ArrowLeft, ArrowRight, Github, Linkedin, Mail, Code, Zap, Lightbulb } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useRef } from "react";
 import { Navbar } from "../components/Navbar";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -21,6 +22,9 @@ const containerVariants = {
 };
 
 export function Founder() {
+  const { language } = useLanguage();
+  const isAr = language === 'ar';
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -32,7 +36,7 @@ export function Founder() {
   const yText = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
   return (
-    <div className="bg-velo-black min-h-screen text-white overflow-hidden relative" ref={containerRef}>
+    <div className={`bg-velo-black min-h-screen text-white overflow-hidden relative ${isAr ? 'text-right' : ''}`} ref={containerRef}>
       <Navbar />
       
       {/* Dynamic Background */}
@@ -48,14 +52,18 @@ export function Founder() {
         
         {/* Back Link */}
         <motion.div 
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, x: isAr ? 20 : -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
-          <Link to="/" className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors group text-sm font-mono uppercase tracking-widest">
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Home
+          <Link to="/" className={`inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors group text-sm font-mono uppercase tracking-widest ${isAr ? 'flex-row-reverse justify-end' : ''}`}>
+            {isAr ? (
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            ) : (
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            )}
+            {isAr ? 'العودة للرئيسية' : 'Back to Home'}
           </Link>
         </motion.div>
 
@@ -64,34 +72,49 @@ export function Founder() {
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 mb-32"
+          className={`grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 mb-32 ${isAr ? 'rtl' : 'ltr'}`}
         >
           <div className="lg:col-span-7 flex flex-col justify-center">
-            <motion.div variants={itemVariants} className="mb-6 inline-flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-mono uppercase tracking-widest text-white/50 border border-white/10 px-3 py-1 rounded-full bg-white/5">CEO & Founder</span>
+            <motion.div variants={itemVariants} className={`mb-6 inline-flex items-center gap-3 flex-wrap ${isAr ? 'flex-row-reverse self-start' : ''}`}>
+              <span className={`inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-white/80 border border-white/10 px-3 py-1.5 rounded-full bg-white/5 ${isAr ? 'flex-row-reverse' : ''}`}>
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                {isAr ? 'الرئيس التنفيذي والمؤسس' : 'CEO & Founder'}
+              </span>
+              <span className={`inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-white/50 border border-white/10 px-3 py-1.5 rounded-full bg-white/5 ${isAr ? 'flex-row-reverse' : ''}`}>
+                🇵🇸 {isAr ? 'فلسطين' : 'Palestine'}
+              </span>
             </motion.div>
             
             <motion.div variants={itemVariants} className="overflow-hidden">
-              <motion.h1 style={{ y: yText }} className="text-6xl sm:text-8xl lg:text-[8rem] font-display font-bold leading-[0.9] tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-white/30 pb-4">
-                Waseem.
+              <motion.h1 style={{ y: yText }} className="text-6xl sm:text-8xl lg:text-[8rem] font-display font-bold leading-[0.9] tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-white/30 pb-4 relative">
+                {isAr ? 'وسيم.' : 'Waseem.'}
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 1.5, delay: 1, ease: "easeOut" }}
+                  className={`absolute -bottom-2 h-1 bg-gradient-to-r from-emerald-500 to-transparent ${isAr ? 'right-0 bg-gradient-to-l' : 'left-0'}`}
+                />
               </motion.h1>
             </motion.div>
 
             <motion.p variants={itemVariants} className="text-xl sm:text-2xl font-light text-white/60 leading-relaxed max-w-2xl mb-10">
-              At just 16 years old, Waseem leads Velo Service with a vision to redefine digital experiences through cutting-edge architecture and bespoke design.
+              {isAr ? (
+                <>في عمر <strong className="text-white">١٨ عاماً</strong> فقط، يقود وسيم وكالة Velo Service برؤية لإعادة تعريف التجارب الرقمية من خلال هندسة برمجية متطورة وتصاميم مخصصة، بفخر يبني المستقبل من <strong className="text-white">فلسطين</strong>.</>
+              ) : (
+                <>At just <strong className="text-white">18 years old</strong>, Waseem leads Velo Service with a vision to redefine digital experiences through cutting-edge architecture and bespoke design, proudly building from <strong className="text-white">Palestine</strong>.</>
+              )}
             </motion.p>
 
-            <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
-              <a href="mailto:waseemquqas@gmail.com" className="hover-target flex items-center gap-3 px-8 py-4 bg-white text-velo-black font-semibold rounded-full hover:bg-white/90 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.1)]">
-                Get in Touch
+            <motion.div variants={itemVariants} className={`flex flex-wrap gap-4 ${isAr ? 'flex-row-reverse self-start' : ''}`}>
+              <a href="mailto:waseemquqas@gmail.com" className={`hover-target flex items-center gap-3 px-8 py-4 bg-white text-velo-black font-semibold rounded-full hover:bg-white/90 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:scale-105 active:scale-95 duration-300 ${isAr ? 'flex-row-reverse' : ''}`}>
+                {isAr ? 'تواصل معي' : 'Get in Touch'}
                 <Mail className="w-4 h-4" />
               </a>
               <div className="flex gap-2">
-                <a href="#" className="hover-target w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 hover:border-white/20 transition-all">
+                <a href="#" className="hover-target w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 hover:border-white/20 transition-all hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
                   <Github className="w-5 h-5" />
                 </a>
-                <a href="#" className="hover-target w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 hover:border-white/20 transition-all">
+                <a href="#" className="hover-target w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 hover:border-white/20 transition-all hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
                   <Linkedin className="w-5 h-5" />
                 </a>
               </div>
@@ -101,7 +124,9 @@ export function Founder() {
           <div className="lg:col-span-5 relative">
             <motion.div 
               variants={itemVariants}
-              className="relative aspect-[3/4] w-full rounded-3xl overflow-hidden bg-white/5 border border-white/10 group"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
+              className="relative aspect-[3/4] w-full rounded-3xl overflow-hidden bg-white/5 border border-white/10 group shadow-2xl"
             >
               {/* Using a placeholder for Waseem since we don't have his photo, using abstract high quality visual */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
@@ -110,11 +135,13 @@ export function Founder() {
                 alt="Waseem - CEO" 
                 className="w-full h-full object-cover mix-blend-luminosity opacity-50 group-hover:opacity-80 transition-opacity duration-700 group-hover:scale-105"
               />
-              <div className="absolute bottom-6 left-6 z-20">
-                <div className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-2">Age 16 // Visionary Developer</div>
-                <div className="flex items-center gap-2 text-white/80 font-medium">
+              <div className={`absolute bottom-6 z-20 ${isAr ? 'right-6' : 'left-6'}`}>
+                <div className="font-mono text-[10px] text-white/40 tracking-widest uppercase mb-2">
+                  {isAr ? 'العمر ١٨ // مطور ذو رؤية' : 'Age 18 // Visionary Developer'}
+                </div>
+                <div className={`flex items-center gap-2 text-white/80 font-medium ${isAr ? 'flex-row-reverse' : ''}`}>
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  Building the Future
+                  {isAr ? 'نبني المستقبل' : 'Building the Future'}
                 </div>
               </div>
               
@@ -129,10 +156,10 @@ export function Founder() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1, duration: 0.8 }}
-              className="absolute -right-8 top-1/4 bg-white/10 backdrop-blur-md border border-white/10 px-6 py-4 rounded-2xl hidden md:block"
+              className={`absolute top-1/4 bg-white/10 backdrop-blur-md border border-white/10 px-6 py-4 rounded-2xl hidden md:block ${isAr ? '-left-8' : '-right-8'}`}
             >
-              <div className="text-3xl font-display font-bold text-white mb-1">16<span className="text-emerald-500">.</span></div>
-              <div className="text-[10px] font-mono tracking-widest text-white/50 uppercase">Years Old</div>
+              <div className="text-3xl font-display font-bold text-white mb-1">{isAr ? '١٨' : '18'}<span className="text-emerald-500">.</span></div>
+              <div className="text-[10px] font-mono tracking-widest text-white/50 uppercase">{isAr ? 'عاماً' : 'Years Old'}</div>
             </motion.div>
           </div>
         </motion.div>
@@ -141,9 +168,21 @@ export function Founder() {
         <div className="py-24 border-t border-white/5">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: Code, title: "Architectural Precision", desc: "Writing code that scales elegantly. Focusing on modularity, robust backends, and flawless frontends." },
-              { icon: Zap, title: "High Performance", desc: "Speed is a feature. Every application is optimized for zero-latency interactions and fluid animations." },
-              { icon: Lightbulb, title: "Creative Innovation", desc: "Pushing boundaries beyond standard templates. Creating bespoke visual identities that stand out globally." }
+              { 
+                icon: Code, 
+                title: isAr ? "دقة معمارية" : "Architectural Precision", 
+                desc: isAr ? "كتابة أكواد قابلة للتوسع بأناقة. التركيز على النمطية، والواجهات الخلفية القوية، والواجهات الأمامية الخالية من العيوب." : "Writing code that scales elegantly. Focusing on modularity, robust backends, and flawless frontends." 
+              },
+              { 
+                icon: Zap, 
+                title: isAr ? "أداء عالي" : "High Performance", 
+                desc: isAr ? "السرعة هي ميزة. يتم تحسين كل تطبيق للحصول على تفاعلات خالية من التأخير وحركات سلسة." : "Speed is a feature. Every application is optimized for zero-latency interactions and fluid animations." 
+              },
+              { 
+                icon: Lightbulb, 
+                title: isAr ? "ابتكار إبداعي" : "Creative Innovation", 
+                desc: isAr ? "تجاوز الحدود أبعد من القوالب القياسية. إنشاء هويات بصرية مخصصة تبرز عالمياً." : "Pushing boundaries beyond standard templates. Creating bespoke visual identities that stand out globally." 
+              }
             ].map((item, idx) => (
               <motion.div 
                 key={idx}
@@ -153,7 +192,7 @@ export function Founder() {
                 transition={{ duration: 0.6, delay: idx * 0.2 }}
                 className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-colors group"
               >
-                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-white/10 transition-all">
+                <div className={`w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-white/10 transition-all ${isAr ? 'ml-auto' : ''}`}>
                   <item.icon className="w-5 h-5 text-white/70" />
                 </div>
                 <h3 className="text-xl font-display font-bold text-white mb-4">{item.title}</h3>
@@ -172,8 +211,17 @@ export function Founder() {
           className="py-32 text-center"
         >
           <p className="font-display font-bold text-3xl sm:text-5xl lg:text-7xl leading-tight text-white/20 hover:text-white transition-colors duration-700 cursor-default">
-            "Age is a metric of time, <br />
-            <span className="text-white">skill is a metric of obsession.</span>"
+            {isAr ? (
+              <>
+                "العمر مقياس للوقت، <br />
+                <span className="text-white">المهارة مقياس للشغف.</span>"
+              </>
+            ) : (
+              <>
+                "Age is a metric of time, <br />
+                <span className="text-white">skill is a metric of obsession.</span>"
+              </>
+            )}
           </p>
         </motion.div>
 
