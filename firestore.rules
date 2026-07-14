@@ -2,58 +2,188 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper functions for validating collection-specific document IDs
-    function isValidServiceRequestId(id) {
-      return id is string && id.size() <= 64;
+    // 1. Global Safety Net: Default-Deny
+    match /{document=**} {
+      allow read, write: if false;
     }
 
-    function isValidUserDocId(id) {
-      return id is string && id.size() <= 128;
+    // Helper Primitives
+    function isSignedIn() {
+      return request.auth != null;
     }
 
-    function isValidReportDocId(id) {
-      return id is string && id.size() <= 128;
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Admin lookup
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'waseemfiras75@gmail.com' ||
+        request.auth.token.email == 'waseem@velo9' ||
+        request.auth.token.email == 'waseemquqas@gmail.com' ||
+        request.auth.token.email == 'firasquqas@gmail.com'
+      );
+    }
+
+    // Schema Validation Helpers
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['id', 'name', 'email', 'plan', 'credits_remaining'])
+          && data.id is string && data.id.size() <= 128
+          && data.name is string && data.name.size() <= 200
+          && data.email is string && data.email.size() <= 150
+          && data.plan is string && (data.plan == 'Free' || data.plan == 'Pro' || data.plan == 'Enterprise')
+          && data.credits_remaining is number && data.credits_remaining >= 0;
+    }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['id', 'name', 'type', 'style', 'userId', 'createdDate', 'updatedDate', 'status'])
+          && data.id is string && data.id.size() <= 128
+          && data.name is string && data.name.size() <= 200
+          && data.type is string && data.type.size() <= 100
+          && data.style is string && data.style.size() <= 100
+          && data.userId is string && data.userId.size() <= 128
+          && data.status is string && (data.status == 'Draft' || data.status == 'Building' || data.status == 'Ready');
+    }
+
+    function isValidUserSettings(data) {
+      return data.keys().hasAll(['theme', 'language'])
+          && data.theme is string && (data.theme == 'dark' || data.theme == 'light')
+          && data.language is string && (data.language == 'en' || data.language == 'ar');
     }
 
     function isValidUserChats(data) {
       return data.keys().hasAll(['sessions', 'currentSessionId'])
-          && data.keys().size() == 2
           && data.sessions is list
-          && data.currentSessionId is string;
+          && data.currentSessionId is string && data.currentSessionId.size() <= 128;
     }
 
-    // User Chats Collection Rules
+    function isValidServiceRequest(data) {
+      return data.keys().hasAll(['id', 'fullName', 'email', 'projectTitle', 'selectedService', 'estimatedBudget', 'preferredTimeline', 'projectDescription', 'preferredContactMethod', 'status'])
+          && data.id is string && data.id.size() <= 128
+          && data.fullName is string && data.fullName.size() <= 200
+          && data.email is string && data.email.size() <= 150
+          && data.projectTitle is string && data.projectTitle.size() <= 200
+          && data.selectedService is string && data.selectedService.size() <= 100
+          && data.estimatedBudget is string && data.estimatedBudget.size() <= 100
+          && data.preferredTimeline is string && data.preferredTimeline.size() <= 100
+          && data.projectDescription is string && data.projectDescription.size() <= 2000
+          && data.preferredContactMethod is string && data.preferredContactMethod.size() <= 100
+          && data.status is string && data.status.size() <= 50;
+    }
+
+    // --- COLLECTION RULES ---
+
+    // 2. User Profiles
+    match /users/{userId} {
+      allow get, list: if isOwner(userId) || isAdmin() || (request.auth == null && (userId.startsWith('user-') || userId.startsWith('admin-') || userId == 'guest'));
+      allow create: if (isOwner(userId) && isValidId(userId) && isValidUserProfile(incoming()) && incoming().id == userId) ||
+                       (request.auth == null && (userId.startsWith('user-') || userId.startsWith('admin-') || userId == 'guest') && isValidId(userId) && isValidUserProfile(incoming()) && incoming().id == userId);
+      allow update: if (isOwner(userId) && isValidUserProfile(incoming()) && incoming().id == userId && (
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'name', 'role', 'company', 'location', 'avatar', 'theme', 'language', 'updatedAt',
+          'credits_used', 'credits_remaining', 'credits_total', 'credits_history'
+        ])
+      )) || isAdmin() || (request.auth == null && (userId.startsWith('user-') || userId.startsWith('admin-') || userId == 'guest') && isValidUserProfile(incoming()) && incoming().id == userId && (
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'name', 'role', 'company', 'location', 'avatar', 'theme', 'language', 'updatedAt',
+          'credits_used', 'credits_remaining', 'credits_total', 'credits_history'
+        ])
+      ));
+      allow delete: if isAdmin();
+    }
+
+    // 3. User Saved Projects
+    match /projects/{projectId} {
+      allow get, list: if (isSignedIn() && (resource == null || resource.data.userId == request.auth.uid)) || isAdmin() || (request.auth == null);
+      allow create: if (isSignedIn() && isValidId(projectId) && isValidProject(incoming()) && incoming().userId == request.auth.uid && incoming().id == projectId) ||
+                       (request.auth == null && isValidId(projectId) && isValidProject(incoming()) && incoming().id == projectId);
+      allow update: if (
+        (isSignedIn() && existing().userId == request.auth.uid && incoming().userId == request.auth.uid && isValidProject(incoming()) && (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'name', 'type', 'description', 'style', 'color', 'updatedDate', 'status', 'progress', 'settings', 'pages', 'components', 'aiHistory'
+          ])
+        )) || isAdmin() ||
+        (request.auth == null && existing().userId == incoming().userId && isValidProject(incoming()) && (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'name', 'type', 'description', 'style', 'color', 'updatedDate', 'status', 'progress', 'settings', 'pages', 'components', 'aiHistory'
+          ])
+        ))
+      );
+      allow delete: if (isSignedIn() && existing().userId == request.auth.uid) || isAdmin() || (request.auth == null);
+    }
+
+    // 4. User Settings Synchronizations
+    match /settings_sync/{userId} {
+      allow read, write: if true;
+    }
+
+    // 5. User Chat Logs
     match /user_chats/{userId} {
       allow read, write: if true;
     }
 
-    // Service Requests Collection Rules
+    // 6. Service Requests (Public creation, Admin management)
     match /service_requests/{requestId} {
-      allow create: if true;
       allow get: if true;
-      allow list: if true;
-      allow update: if true;
-      allow delete: if true;
+      allow create: if isValidId(requestId) && isValidServiceRequest(incoming());
+      allow list, update, delete: if isAdmin();
     }
 
-    // Custom Users Sync Rules
-    match /custom_users/{userId} {
-      allow read, write: if true;
-    }
-
-    // Custom Reports / Feedback Rules
-    match /custom_reports/{reportId} {
-      allow read, write: if true;
-    }
-
-    // Settings Collection Rules
+    // 7. Legacy Settings Configuration
     match /settings/{settingId} {
-      allow read, write: if settingId == 'global_config';
+      allow read: if true;
+      allow write: if isAdmin() || (request.auth == null);
     }
 
-    // Analytics Collection Rules
+    // 8. Legacy Analytics tracking
     match /analytics/{analyticId} {
-      allow read, write: if analyticId == 'global_stats';
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if isAdmin();
+    }
+
+    // Custom Users Sync & Custom Reports / Feedback (Legacy fallback paths)
+    match /custom_users/{userId} {
+      allow read, write: if isOwner(userId) || isAdmin() || (request.auth == null);
+    }
+
+    match /custom_reports/{reportId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin() || (request.auth == null);
+    }
+
+    // 9. Audit Logs
+    match /audit_logs/{logId} {
+      allow list, get: if isAdmin();
+      allow create: if isSignedIn() || (request.auth == null);
+      allow update, delete: if isAdmin();
+    }
+
+    // 10. Notifications
+    match /notifications/{notifId} {
+      allow list, get: if isSignedIn() || (request.auth == null);
+      allow create: if isAdmin() || (request.auth == null);
+      allow update: if isSignedIn() || (request.auth == null); // Allow users to mark as read
+      allow delete: if isAdmin();
+    }
+
+    // 11. Subscription Plans
+    match /plans/{planId} {
+      allow list, get: if true;
+      allow write: if isAdmin() || (request.auth == null);
     }
   }
 }

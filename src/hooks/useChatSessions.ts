@@ -150,8 +150,11 @@ export function useChatSessions() {
             setCurrentSessionId("default");
           }
         }
-      } catch (e) {
+      } catch (e: any) {
         console.error("Error loading chats", e);
+        if (e && (e.code === 'permission-denied' || e.message?.includes('permission') || e.message?.includes('Permission') || e.message?.includes('insufficient'))) {
+          await handleFirestoreError(e, OperationType.GET, `user_chats/${user?.uid}`);
+        }
         // Fallback to local storage on error
         const local = localStorage.getItem("velo_local_chats");
         if (local && mounted) {
@@ -198,8 +201,11 @@ export function useChatSessions() {
             currentSessionId
           }, { merge: true });
         }
-      } catch (e) {
+      } catch (e: any) {
         console.error("Error saving chats to Firestore", e);
+        if (e && (e.code === 'permission-denied' || e.message?.includes('permission') || e.message?.includes('Permission') || e.message?.includes('insufficient'))) {
+          await handleFirestoreError(e, OperationType.WRITE, `user_chats/${user?.uid}`);
+        }
         // We do not throw to prevent app crashing, since localStorage already persisted it successfully!
       }
     };

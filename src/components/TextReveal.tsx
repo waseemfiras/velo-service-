@@ -20,7 +20,7 @@ export function TextReveal({ text, className, delay = 0 }: { text: string, class
         type: "spring",
         damping: 15,
         stiffness: 100,
-      },
+      } as const,
     },
     hidden: {
       opacity: 0,
@@ -30,7 +30,7 @@ export function TextReveal({ text, className, delay = 0 }: { text: string, class
         type: "spring",
         damping: 15,
         stiffness: 100,
-      },
+      } as const,
     },
   };
 

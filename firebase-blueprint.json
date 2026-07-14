@@ -59,6 +59,65 @@
         "currentSessionId": { "type": "string" }
       },
       "required": ["sessions", "currentSessionId"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Premium user profile card and settings.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "company": { "type": "string" },
+        "joinDate": { "type": "string" },
+        "location": { "type": "string" },
+        "plan": { "type": "string" },
+        "avatar": { "type": "string" },
+        "credits_total": { "type": "number" },
+        "credits_used": { "type": "number" },
+        "credits_remaining": { "type": "number" },
+        "language": { "type": "string" },
+        "theme": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "plan", "credits_remaining"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Cloud saved project configurations, design history, and prompts.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "description": { "type": "string" },
+        "style": { "type": "string" },
+        "color": { "type": "string" },
+        "createdDate": { "type": "string" },
+        "updatedDate": { "type": "string" },
+        "status": { "type": "string" },
+        "progress": { "type": "number" },
+        "settings": { "type": "object" },
+        "pages": { "type": "array" },
+        "components": { "type": "array" },
+        "userId": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "aiHistory": { "type": "array" }
+      },
+      "required": ["id", "name", "type", "style", "userId", "createdDate", "updatedDate", "status"]
+    },
+    "UserSettings": {
+      "title": "UserSettings",
+      "description": "User interface language, theme, and dev-preferences.",
+      "type": "object",
+      "properties": {
+        "theme": { "type": "string" },
+        "language": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["theme", "language"]
     }
   },
   "firestore": {
@@ -77,6 +136,18 @@
     "user_chats/{userId}": {
       "schema": "UserChats",
       "description": "User's stored chat sessions"
+    },
+    "users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile records and billing plans"
+    },
+    "projects/{projectId}": {
+      "schema": "Project",
+      "description": "User saved cloud projects"
+    },
+    "settings_sync/{userId}": {
+      "schema": "UserSettings",
+      "description": "User settings synchronization across devices"
     }
   }
 }

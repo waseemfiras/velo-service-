@@ -42,6 +42,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     let unsubscribe: () => void;
     
+    // Safety fallback timer: force loading states to false after 1.5 seconds to prevent hanging
+    const safetyTimer = setTimeout(() => {
+      console.warn("Auth initialization safety timeout triggered");
+      setLoadingFirebase(false);
+      setLoadingCustom(false);
+    }, 1500);
+    
     // 1. Initialize Firebase Auth
     const initAuth = async () => {
       try {
@@ -96,6 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     return () => {
       if (unsubscribe) unsubscribe();
+      clearTimeout(safetyTimer);
     };
   }, []);
 

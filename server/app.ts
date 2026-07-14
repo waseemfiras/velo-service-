@@ -7,6 +7,7 @@ import crypto from "crypto";
 import { fileURLToPath } from 'url';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, getDocs, query, where, doc, updateDoc, deleteDoc, setDoc, getDoc } from "firebase/firestore/lite";
+import { enhanceWebsitePrompt, generateFullWebsite, regenerateWebsite } from "./gemini";
 
 let _filename = "";
 let _dirname = process.cwd();
@@ -21,6 +22,52 @@ try {
 
 const app = express();
 app.use(express.json());
+
+// Forge AI API routes
+app.post("/forge/chat", async (req, res) => {
+  try {
+    const { prompt, model } = req.body;
+    if (!prompt) {
+      return res.status(400).json({ error: "Prompt is required" });
+    }
+    const result = await enhanceWebsitePrompt(prompt, model);
+    res.json({ success: true, ...result });
+  } catch (error: any) {
+    console.error("AI Error:", error);
+    res.status(500).json({ error: error.message || "Failed to generate AI response" });
+  }
+});
+
+app.post("/forge/generate-full", async (req, res) => {
+  try {
+    const { prompt, style, color, pagesList, model } = req.body;
+    if (!prompt) {
+      return res.status(400).json({ error: "Prompt is required" });
+    }
+    const result = await generateFullWebsite(prompt, style, color, pagesList || [], model);
+    res.json({ success: true, project: result });
+  } catch (error: any) {
+    console.error("Generate Full Website Error:", error);
+    res.status(500).json({ error: error.message || "Failed to generate full website structure" });
+  }
+});
+
+app.post("/forge/regenerate", async (req, res) => {
+  try {
+    const { project, prompt, model } = req.body;
+    if (!project) {
+      return res.status(400).json({ error: "Project structure is required" });
+    }
+    if (!prompt) {
+      return res.status(400).json({ error: "Instruction prompt is required" });
+    }
+    const result = await regenerateWebsite(project, prompt, model);
+    res.json({ success: true, project: result });
+  } catch (error: any) {
+    console.error("Regenerate Website Error:", error);
+    res.status(500).json({ error: error.message || "Failed to regenerate website structure" });
+  }
+});
 
 // Enable lightweight CORS for cross-origin hosting (e.g. Netlify)
 app.use((req, res, next) => {
@@ -261,7 +308,22 @@ You have complete, absolute knowledge about our website, including its sections,
    - Always detect the language of the user's latest message and respond in the EXACT SAME language (e.g., if Arabic, respond in Arabic. If English, respond in English). Do not mix languages.
    - Maintain a highly sophisticated, helpful, polite, and executive-level tone.
    - Format lists with clean Markdown and single lines. Ensure links are formatted beautifully like [عنوان الرابط](/route) to allow users to navigate directly.
-   - When writing in Arabic, use Right-to-Left friendly formatting (clear spacing, separate lines for links, avoid nesting English terms in Arabic lines to prevent layout distortion).`;
+   - When writing in Arabic, use Right-to-Left friendly formatting (clear spacing, separate lines for links, avoid nesting English terms in Arabic lines to prevent layout distortion).
+
+6. Code Generation Guidelines (CRITICAL):
+   - When a user asks you for code, you MUST write complete, high-quality, professional, and well-structured code. Do not write lazy or half-written placeholders unless requested.
+   - Always wrap your code inside standard markdown code blocks, specifying the language, e.g.:
+     \`\`\`javascript
+     // code here
+     \`\`\`
+   - Your code must be robust, elegant, cleanly structured, and strongly written.
+
+7. Professional Text Block Generation (CRITICAL):
+   - If the user asks for "نص احترافي" (professional text) or asks you to write professional copywriting, titles, emails, messages, or descriptions, you MUST isolate and wrap that professional text inside the [PROFESSIONAL_TEXT] tags like this:
+     [PROFESSIONAL_TEXT]
+     The professional text content here...
+     [/PROFESSIONAL_TEXT]
+   - Anything outside of these tags is treated as general conversation or commentary. This activates a special user interface widget that renders a gorgeous glowing premium card with an exclusive "Copy Text" button specifically for that text! Only use this if the user requested a professional text/writeup.`;
 
       response = await generateWithFallback(ai, contents, systemInstruction, "gemini-3.1-flash-lite");
     }

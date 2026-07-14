@@ -1,5 +1,5 @@
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "motion/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Magnetic } from "./Magnetic";
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
@@ -21,6 +21,7 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, loading } = useAuth();
   const { language, setLanguage, t } = useLanguage();
+  const navigate = useNavigate();
 
   const getDaysLeft = () => {
     const currentDay = new Date().getDay();
@@ -43,6 +44,28 @@ export function Navbar() {
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'ar' : 'en');
+  };
+
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+
+    if (window.location.pathname === "/") {
+      const lenis = (window as any).lenis;
+      const element = document.getElementById(targetId);
+      if (lenis && element) {
+        lenis.scrollTo(element, {
+          offset: -80,
+          duration: 1.8,
+          easing: (t: number) => 1 - Math.pow(1 - t, 5),
+        });
+      } else if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      sessionStorage.setItem('scrollTarget', targetId);
+      navigate(`/#${targetId}`);
+    }
   };
 
   return (
@@ -68,7 +91,15 @@ export function Navbar() {
           </Magnetic>
           
           <div className="hidden lg:flex items-center gap-5 px-5 py-2 bg-white/[0.03] border border-white/10 rounded-full backdrop-blur-md shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)] hover:border-white/20 transition-all duration-300">
-            <Magnetic intensity={0.2}><a href="/#services" className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1">{t('services')}</a></Magnetic>
+            <Magnetic intensity={0.2}>
+              <a 
+                href="/#services" 
+                onClick={(e) => handleAnchorClick(e, "services")} 
+                className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1"
+              >
+                {t('services')}
+              </a>
+            </Magnetic>
             <Magnetic intensity={0.2}>
               <Link to="/request-service" className="text-xs font-display font-medium text-emerald-400 hover:text-emerald-300 transition-colors hover-target px-2.5 py-1">
                 {t('requestService')}
@@ -84,8 +115,24 @@ export function Navbar() {
                 {t('aiChat')}
               </Link>
             </Magnetic>
-            <Magnetic intensity={0.2}><a href="/#work" className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1">{t('work')}</a></Magnetic>
-            <Magnetic intensity={0.2}><a href="/#contact" className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1">{t('contact')}</a></Magnetic>
+            <Magnetic intensity={0.2}>
+              <a 
+                href="/#work" 
+                onClick={(e) => handleAnchorClick(e, "work")} 
+                className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1"
+              >
+                {t('work')}
+              </a>
+            </Magnetic>
+            <Magnetic intensity={0.2}>
+              <a 
+                href="/#contact" 
+                onClick={(e) => handleAnchorClick(e, "contact")} 
+                className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1"
+              >
+                {t('contact')}
+              </a>
+            </Magnetic>
           </div>
 
           <div className="flex items-center gap-4">
@@ -101,6 +148,20 @@ export function Navbar() {
                     <div className="absolute inset-0 bg-white/80 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-out" />
                   </motion.button>
                 </Link>
+              </Magnetic>
+            </div>
+
+            {/* Desktop Language Selector */}
+            <div className="hidden lg:block">
+              <Magnetic intensity={0.2}>
+                <button
+                  onClick={toggleLanguage}
+                  className="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-colors flex items-center justify-center gap-1 hover-target px-3.5 py-1.5"
+                  title={language === 'ar' ? 'English' : 'العربية'}
+                >
+                  <Globe className="w-4 h-4" />
+                  <span className="text-xs font-semibold tracking-wider">{language === 'en' ? 'AR' : 'EN'}</span>
+                </button>
               </Magnetic>
             </div>
             
@@ -164,7 +225,11 @@ export function Navbar() {
             <span className="text-[10px] font-medium">{t('requestService')}</span>
           </Link>
           <div className="w-px h-8 bg-white/10" />
-          <a href="/#contact" className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors">
+          <a 
+            href="/#contact" 
+            onClick={(e) => handleAnchorClick(e, "contact")} 
+            className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             <span className="text-[10px] font-medium">{t('contact')}</span>
           </a>
@@ -179,7 +244,7 @@ export function Navbar() {
             animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
             exit={{ opacity: 0, x: "100%", filter: "blur(10px)" }}
             transition={{ type: "spring", stiffness: 350, damping: 30 }}
-            className="fixed inset-0 z-50 bg-velo-black/95 backdrop-blur-2xl flex flex-col p-6 pt-24 gap-6 lg:hidden overflow-y-auto text-right"
+            className="fixed inset-0 z-50 bg-velo-black/98 backdrop-blur-2xl flex flex-col p-6 pt-24 gap-6 lg:hidden overflow-y-auto text-right"
           >
             {/* Close button inside drawer */}
             <button
@@ -189,33 +254,81 @@ export function Navbar() {
             >
               <CloseIcon className="w-6 h-6" />
             </button>
-             <div className="flex flex-col gap-4 mt-4">
+            
+            <div className="flex flex-col gap-5 mt-4">
+              {/* 1. Services */}
               <a 
                 href="/#services" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-lg font-display font-medium text-white/80 hover:text-white border-b border-white/5 pb-3"
+                onClick={(e) => handleAnchorClick(e, "services")}
+                className="text-xl font-display font-semibold text-white/85 hover:text-white border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
               >
-                {t('services')}
+                <span className="text-sm text-white/40 font-mono">01/</span>
+                <span>{t('services')}</span>
               </a>
+
+              {/* 2. Request Service */}
+              <Link 
+                to="/request-service" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-xl font-display font-semibold text-emerald-400 hover:text-emerald-300 border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
+              >
+                <span className="text-sm text-emerald-400/40 font-mono">02/</span>
+                <span>{t('requestService')}</span>
+              </Link>
+
+              {/* 3. Our Team */}
               <Link 
                 to="/founder" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-lg font-display font-medium text-white/80 hover:text-white border-b border-white/5 pb-3"
+                className="text-xl font-display font-semibold text-white/85 hover:text-white border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
               >
-                {language === 'ar' ? 'فريقنا' : 'Our Team'}
+                <span className="text-sm text-white/40 font-mono">03/</span>
+                <span>{language === 'ar' ? 'فريقنا' : 'Our Team'}</span>
               </Link>
+
+              {/* 4. AI Chat */}
+              <Link 
+                to="/chat" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-xl font-display font-semibold text-white/85 hover:text-white border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
+              >
+                <span className="text-sm text-white/40 font-mono">04/</span>
+                <span>{t('aiChat')}</span>
+              </Link>
+
+              {/* 5. Our Work */}
               <a 
                 href="/#work" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-lg font-display font-medium text-white/80 hover:text-white border-b border-white/5 pb-3"
+                onClick={(e) => handleAnchorClick(e, "work")}
+                className="text-xl font-display font-semibold text-white/85 hover:text-white border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
               >
-                {t('work')}
+                <span className="text-sm text-white/40 font-mono">05/</span>
+                <span>{t('work')}</span>
+              </a>
+
+              {/* 6. Contact Us */}
+              <a 
+                href="/#contact" 
+                onClick={(e) => handleAnchorClick(e, "contact")}
+                className="text-xl font-display font-semibold text-white/85 hover:text-white border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
+              >
+                <span className="text-sm text-white/40 font-mono">06/</span>
+                <span>{t('contact')}</span>
               </a>
             </div>
 
             <div className="flex flex-col gap-4 mt-auto pb-8">
+              {/* Language Switcher Button */}
+              <button
+                onClick={() => { toggleLanguage(); setIsMobileMenuOpen(false); }}
+                className="flex items-center justify-center gap-2 py-3.5 bg-white/5 border border-white/10 rounded-full text-white/90 hover:text-white transition-all font-medium text-sm"
+              >
+                <Globe className="w-4 h-4" />
+                <span>{language === 'en' ? 'تحويل للعربية' : 'Switch to English'}</span>
+              </button>
+
               <Link to="/request-service" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
-                <button className="w-full py-4 bg-white text-velo-black font-semibold text-center rounded-full hover-target shadow-lg text-sm">
+                <button className="w-full py-4 bg-white text-velo-black font-bold text-center rounded-full hover-target shadow-lg text-sm">
                   {language === 'ar' ? 'طلب مشروع جديد' : 'Start Project'}
                 </button>
               </Link>

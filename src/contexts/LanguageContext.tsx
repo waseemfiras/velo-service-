@@ -286,17 +286,42 @@ const TRANSLATIONS: Record<string, Record<Language, string>> = {
   setting_custom_budget_btn: { en: 'Write Custom Budget', ar: 'كتابة ميزانية مخصصة' },
   setting_select_budget_btn: { en: 'Select from List', ar: 'اختيار من القائمة' },
   field_custom_budget_placeholder: { en: 'e.g., $500, 2000 SAR, etc.', ar: 'مثال: $500 أو 2000 ريال، إلخ.' },
+
+  // Forge Platform
+  forge_workspace: { en: 'Workspace', ar: 'مساحة العمل' },
+  forge_my_projects: { en: 'My Projects', ar: 'مشاريعي' },
+  forge_my_projects_desc: { en: 'Manage your generated applications and websites.', ar: 'إدارة التطبيقات والمواقع التي تم إنشاؤها.' },
+  forge_credits: { en: 'Credits', ar: 'الرصيد' },
+  forge_credits_desc: { en: 'Monitor your AI generations, remaining credits, and subscription status.', ar: 'راقب عمليات التوليد بالذكاء الاصطناعي، الرصيد المتبقي، وحالة الاشتراك.' },
+  forge_profile: { en: 'Profile', ar: 'الملف الشخصي' },
+  forge_profile_desc: { en: 'Manage your personal information and developer profile.', ar: 'إدارة معلوماتك الشخصية وملف المطور الخاص بك.' },
+  forge_settings: { en: 'Settings', ar: 'الإعدادات' },
+  forge_settings_desc: { en: 'Configure your workspace preferences and platform defaults.', ar: 'تكوين تفضيلات مساحة العمل والافتراضيات للمنصة.' },
+  forge_admin: { en: 'Admin Dashboard', ar: 'لوحة الإدارة' },
+  forge_admin_desc: { en: 'Platform configuration, user management, and system metrics.', ar: 'تكوين المنصة، إدارة المستخدمين، ومقاييس النظام.' },
+  forge_back_home: { en: 'Back to Site', ar: 'العودة للموقع' },
+  forge_create_project: { en: 'Create Project', ar: 'إنشاء مشروع' },
+  forge_search_projects: { en: 'Search projects...', ar: 'ابحث عن المشاريع...' },
+  forge_delete: { en: 'Delete', ar: 'حذف' },
+  forge_duplicate: { en: 'Duplicate', ar: 'تكرار' },
+  forge_open: { en: 'Open Workspace', ar: 'فتح مساحة العمل' },
 };
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
-    const saved = localStorage.getItem('velo_preferred_language');
-    return (saved as Language) || 'en';
+    try {
+      const saved = localStorage.getItem('velo_preferred_language');
+      return (saved as Language) || 'en';
+    } catch (e) {
+      return 'en';
+    }
   });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem('velo_preferred_language', lang);
+    try {
+      localStorage.setItem('velo_preferred_language', lang);
+    } catch (e) {}
   };
 
   const t = (key: string): string => {

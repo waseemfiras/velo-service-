@@ -8,7 +8,7 @@ import { FormattedMessage } from "../components/FormattedMessage";
 import { VeloLogo } from "../components/VeloLogo";
 import { useChatLimits } from "../hooks/useChatLimits";
 import { AuthModal } from "../components/AuthModal";
-import { useChatSessions, ModelType, ChatMessage } from "../hooks/useChatSessions";
+import { useChatSessions, ModelType, ChatMessage, ChatSession } from "../hooks/useChatSessions";
 import { getApiUrl } from "../lib/apiUrl";
 
 export function FullChat() {
@@ -179,7 +179,7 @@ export function FullChat() {
   };
 
   const startNewSession = () => {
-    const newSession = {
+    const newSession: ChatSession = {
       id: Date.now().toString(),
       title: "New Conversation",
       messages: [
@@ -256,7 +256,7 @@ export function FullChat() {
               </button>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-3 space-y-1 custom-scrollbar">
+            <div data-lenis-prevent className="flex-1 overflow-y-auto p-3 space-y-1 custom-scrollbar">
               {sessions.map(s => (
                 <div
                   key={s.id}
@@ -401,7 +401,7 @@ export function FullChat() {
         </header>
 
         {/* Chat Area */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent relative z-10 scroll-smooth">
+        <main data-lenis-prevent className="flex-1 overflow-y-auto p-4 sm:p-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent relative z-10 scroll-smooth">
           <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 mt-4 sm:mt-10">
             <AnimatePresence initial={false}>
               {messages.map((msg) => (

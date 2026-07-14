@@ -5,14 +5,20 @@ export function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [cursorEnabled, setCursorEnabled] = useState(() => {
-    const saved = localStorage.getItem('velo_enable_custom_cursor');
-    return saved !== 'false'; // Default to true (enabled)
+    try {
+      const saved = localStorage.getItem('velo_enable_custom_cursor');
+      return saved !== 'false'; // Default to true (enabled)
+    } catch (e) {
+      return true;
+    }
   });
 
   useEffect(() => {
     const handleSettingChange = () => {
-      const saved = localStorage.getItem('velo_enable_custom_cursor');
-      setCursorEnabled(saved !== 'false');
+      try {
+        const saved = localStorage.getItem('velo_enable_custom_cursor');
+        setCursorEnabled(saved !== 'false');
+      } catch (e) {}
     };
 
     window.addEventListener('velo_cursor_changed', handleSettingChange);

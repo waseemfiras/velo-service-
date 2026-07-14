@@ -40,11 +40,17 @@ export function MaintenanceGuard({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let unsubscribe: () => void;
 
+    // Safety timeout: set checking to false after 1.5s to prevent infinite loading screen
+    const safetyTimer = setTimeout(() => {
+      setChecking(false);
+    }, 1500);
+
     const checkMaintenance = async () => {
       try {
         const { db } = await initializeFirebase();
         if (!db) {
           setChecking(false);
+          clearTimeout(safetyTimer);
           return;
         }
 
@@ -67,13 +73,16 @@ export function MaintenanceGuard({ children }: { children: React.ReactNode }) {
             } catch (e) {}
           }
           setChecking(false);
+          clearTimeout(safetyTimer);
         }, (error) => {
           console.error("Error fetching maintenance config:", error);
           setChecking(false);
+          clearTimeout(safetyTimer);
         });
       } catch (err) {
         console.error("Failed to initialize Firebase for maintenance guard:", err);
         setChecking(false);
+        clearTimeout(safetyTimer);
       }
     };
 
@@ -81,6 +90,7 @@ export function MaintenanceGuard({ children }: { children: React.ReactNode }) {
 
     return () => {
       if (unsubscribe) unsubscribe();
+      clearTimeout(safetyTimer);
     };
   }, []);
 

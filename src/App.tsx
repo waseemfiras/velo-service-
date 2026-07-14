@@ -18,6 +18,10 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { useVisitorTracking } from './hooks/useVisitorTracking';
 import { SplashIntro } from './components/SplashIntro';
 import { MaintenanceGuard } from './components/MaintenanceGuard';
+import { ScrollToTop } from './components/ScrollToTop';
+import { SmoothScroll } from './components/SmoothScroll';
+
+
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -41,6 +45,8 @@ function AnimatedRoutes() {
           <Route path="/founder" element={<Founder />} />
           <Route path="/track-request" element={<Navigate to="/request-service?tab=track" replace />} />
           <Route path="/dashboard" element={<Navigate to="/request-service?tab=dashboard" replace />} />
+          
+
         </Routes>
       </motion.div>
     </AnimatePresence>
@@ -82,7 +88,9 @@ export default function App() {
           }}
         />
         <Router>
+          <SmoothScroll />
           <CustomCursor />
+          <ScrollToTop />
           <MaintenanceGuard>
             <main className="min-h-screen bg-velo-black selection:bg-white/20 selection:text-white overflow-x-hidden">
               {!showSplash && <AnimatedRoutes />}

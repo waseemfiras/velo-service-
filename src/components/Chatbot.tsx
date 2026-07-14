@@ -300,7 +300,7 @@ export function Chatbot() {
                   </div>
 
                   {/* Sessions List */}
-                  <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-1.5 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+                  <div data-lenis-prevent className="flex-1 overflow-y-auto px-3 pb-3 space-y-1.5 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
                     {sessions.map((sess) => {
                       const isSelected = sess.id === currentSessionId;
                       const isEditing = sess.id === editingSessionId;
@@ -490,7 +490,7 @@ export function Chatbot() {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent scroll-smooth">
+            <div data-lenis-prevent className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent scroll-smooth">
               {messages.map((msg) => (
                 <motion.div
                   layout

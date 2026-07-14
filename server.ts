@@ -11,7 +11,10 @@ async function startServer() {
   app.use("/api", apiApp);
 
   // Serve Firebase config
-  app.get("/firebase-applet-config.json", (req, res) => {
+  app.get("/firebase-applet-config.json", (req, res, next) => {
+    if ('import' in req.query) {
+      return next();
+    }
     res.sendFile(path.join(process.cwd(), "firebase-applet-config.json"));
   });
 

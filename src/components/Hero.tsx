@@ -18,7 +18,7 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 50 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } as const },
 };
 
 export function Hero() {
@@ -30,6 +30,7 @@ export function Hero() {
   });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
     <section ref={ref} className="relative min-h-screen flex flex-col justify-center px-6 pt-32 lg:pt-20 overflow-hidden bg-velo-black">
@@ -56,7 +57,7 @@ export function Hero() {
       </div>
 
       {/* Background Elements (Subtle glows) */}
-      <motion.div style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]) }} className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-[120px] pointer-events-none z-0" />
+      <motion.div style={{ y: backgroundY }} className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-[120px] pointer-events-none z-0" />
       
       <motion.div style={{ y, opacity }} className="max-w-7xl mx-auto w-full relative z-10">
         <motion.div
