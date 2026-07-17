@@ -5,9 +5,16 @@ import { TextReveal } from "./TextReveal";
 import { Magnetic } from "./Magnetic";
 import { useRef, useEffect } from "react";
 
+import saasDashboardImg from "../assets/images/saas_dashboard_dark_1784287726427.jpg";
+import luxuryAgencyImg from "../assets/images/luxury_agency_dark_1784287739782.jpg";
+import ecommerceImg from "../assets/images/ecommerce_ui_dark_1784287763153.jpg";
+import portfolioImg from "../assets/images/portfolio_ui_dark_1784287787955.jpg";
+import analyticsImg from "../assets/images/analytics_ui_dark_1784287775997.jpg";
+import bankingImg from "../assets/images/banking_app_dark_1784287752803.jpg";
+
 const generatedScreens = [
   {
-    src: "/src/assets/images/saas_dashboard_dark_1784287726427.jpg",
+    src: saasDashboardImg,
     title: "SaaS Dashboard",
     className: "w-[420px] h-[236px] top-[15%] right-[-5%] rotate-[8deg] z-10 shadow-[0_30px_60px_rgba(0,0,0,0.8)]",
     delay: 0.1,
@@ -16,7 +23,7 @@ const generatedScreens = [
     opacity: 0.5
   },
   {
-    src: "/src/assets/images/luxury_agency_dark_1784287739782.jpg",
+    src: luxuryAgencyImg,
     title: "Luxury Agency",
     className: "w-[380px] h-[214px] top-[18%] left-[-2%] -rotate-[6deg] z-20 shadow-[0_20px_40px_rgba(0,0,0,0.6)]",
     delay: 0.3,
@@ -25,7 +32,7 @@ const generatedScreens = [
     opacity: 0.4
   },
   {
-    src: "/src/assets/images/ecommerce_ui_dark_1784287763153.jpg",
+    src: ecommerceImg,
     title: "E-commerce",
     className: "w-[460px] h-[258px] bottom-[12%] right-[2%] -rotate-[5deg] z-10 shadow-[0_30px_60px_rgba(0,0,0,0.8)]",
     delay: 0.2,
@@ -34,7 +41,7 @@ const generatedScreens = [
     opacity: 0.5
   },
   {
-    src: "/src/assets/images/portfolio_ui_dark_1784287787955.jpg",
+    src: portfolioImg,
     title: "Portfolio",
     className: "w-[400px] h-[300px] bottom-[15%] left-[5%] rotate-[4deg] z-20 shadow-[0_25px_50px_rgba(0,0,0,0.7)]",
     delay: 0.4,
@@ -43,7 +50,7 @@ const generatedScreens = [
     opacity: 0.6
   },
   {
-    src: "/src/assets/images/analytics_ui_dark_1784287775997.jpg",
+    src: analyticsImg,
     title: "Analytics Dashboard",
     className: "w-[320px] h-[180px] top-[35%] right-[25%] rotate-[2deg] blur-[2px] z-0 shadow-[0_10px_20px_rgba(0,0,0,0.5)]",
     delay: 0.5,
@@ -52,7 +59,7 @@ const generatedScreens = [
     opacity: 0.25
   },
   {
-    src: "/src/assets/images/banking_app_dark_1784287752803.jpg",
+    src: bankingImg,
     title: "Mobile Banking App",
     className: "w-[240px] h-[426px] bottom-[25%] left-[25%] -rotate-[4deg] blur-[2px] z-0 shadow-[0_15px_30px_rgba(0,0,0,0.6)]",
     delay: 0.6,
