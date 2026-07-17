@@ -265,16 +265,18 @@ export function Hero() {
 
           <motion.div variants={itemVariants}>
             <Magnetic intensity={0.2}>
-              <Link to="/chat">
-                <motion.button
+              <Link to="/chat" className="inline-block">
+                <motion.div
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="btn-premium hover-target group px-8 py-3.5 text-white"
+                  className="btn-orbit-wrapper hover-target group cursor-pointer"
                 >
-                  <div className="btn-glow" />
-                  <span className="relative z-10 text-lg tracking-wide">Discuss Your Project</span>
-                  <ArrowRight className="relative z-10 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </motion.button>
+                  <div className="btn-orbit-light" />
+                  <div className="btn-orbit-inner px-8 py-3.5 text-white">
+                    <span className="text-lg tracking-wide">Discuss Your Project</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                  </div>
+                </motion.div>
               </Link>
             </Magnetic>
           </motion.div>

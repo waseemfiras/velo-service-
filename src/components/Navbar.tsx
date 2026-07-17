@@ -103,16 +103,18 @@ export function Navbar() {
           <div className="flex items-center gap-4">
             <div className="hidden sm:block">
               <Magnetic intensity={0.3}>
-                <Link to="/request-service">
-                  <motion.button
+                <Link to="/request-service" className="inline-block">
+                  <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="btn-premium px-6 py-2 text-white text-xs sm:text-sm hover-target"
+                    className="btn-orbit-wrapper hover-target cursor-pointer"
                   >
-                    <div className="btn-glow" />
-                    <span className="relative z-10">{language === 'ar' ? 'طلب مشروع' : 'Start Project'}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                  </motion.button>
+                    <div className="btn-orbit-light" />
+                    <div className="btn-orbit-inner px-5 py-2 text-white text-xs sm:text-sm">
+                      <span>{language === 'ar' ? 'طلب مشروع' : 'Start Project'}</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </div>
+                  </motion.div>
                 </Link>
               </Magnetic>
             </div>

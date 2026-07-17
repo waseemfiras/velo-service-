@@ -129,3 +129,63 @@ a, button, input, textarea {
 .btn-premium:hover .btn-glow, .card-premium:hover .btn-glow {
   opacity: 1;
 }
+
+/* Rotating glowing border button */
+.btn-orbit-wrapper {
+  position: relative;
+  display: inline-flex;
+  padding: 1.5px; /* Border thickness */
+  border-radius: 9999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.btn-orbit-wrapper:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.btn-orbit-light {
+  position: absolute;
+  top: -150%;
+  left: -150%;
+  width: 400%;
+  height: 400%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.8) 75%,
+    #ffffff 90%,
+    rgba(255, 255, 255, 0.8) 95%,
+    transparent 100%
+  );
+  animation: rotate-orbit 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotate-orbit {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-orbit-inner {
+  position: relative;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #181818 0%, #080808 100%);
+  color: white;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
