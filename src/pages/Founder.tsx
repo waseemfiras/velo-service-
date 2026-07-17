@@ -57,13 +57,14 @@ export function Founder() {
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
-          <Link to="/" className={`inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors group text-sm font-mono uppercase tracking-widest ${isAr ? 'flex-row-reverse justify-end' : ''}`}>
+          <Link to="/" className={`btn-premium px-5 py-2 text-white/80 hover:text-white group text-sm font-mono tracking-widest ${isAr ? 'flex-row-reverse justify-end' : ''}`}>
+            <div className="btn-glow" />
             {isAr ? (
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             ) : (
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <ArrowLeft className="relative z-10 w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             )}
-            {isAr ? 'العودة للرئيسية' : 'Back to Home'}
+            <span className="relative z-10">{isAr ? 'العودة للرئيسية' : 'Back to Home'}</span>
           </Link>
         </motion.div>
 

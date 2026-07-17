@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Send, User, ArrowLeft, ChevronDown, Menu, Trash2, Edit2, Check, Plus, X, MessageSquare } from "lucide-react";
+import { Send, User, ArrowLeft, ChevronDown, Menu, Trash2, Edit2, Check, Plus, X, MessageSquare, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Magnetic } from "../components/Magnetic";
 import { TextReveal } from "../components/TextReveal";
@@ -186,7 +186,7 @@ export function FullChat() {
         {
           id: "1",
           role: "assistant",
-          content: "Hello! I am the Velo Service AI assistant. Let's discuss your next big project. How can we help you?",
+          content: "Welcome! I am Velo, your premium digital concierge. Let's design and build your next masterpiece. How can I elevate your vision today?",
         },
       ],
       selectedModel: "vgpt-1.5" as ModelType,
@@ -246,10 +246,11 @@ export function FullChat() {
             <div className="p-4 border-b border-white/5 flex justify-between items-center">
               <button
                 onClick={startNewSession}
-                className="flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium w-full"
+                className="btn-premium w-full !justify-start text-white px-4 py-2 text-sm cursor-none"
               >
-                <Plus className="w-4 h-4" />
-                New Chat
+                <div className="btn-glow" />
+                <Plus className="relative z-10 w-4 h-4 ml-2" />
+                <span className="relative z-10">New Chat</span>
               </button>
               <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden p-2 text-white/50 hover:text-white">
                 <X className="w-5 h-5" />
@@ -327,12 +328,11 @@ export function FullChat() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="hover-target flex items-center gap-2 text-white/70 hover:text-white transition-colors"
+                  className="btn-premium hover-target px-4 py-1.5 text-white/90 hover:text-white cursor-none"
                 >
-                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-                    <ArrowLeft className="w-4 h-4" />
-                  </div>
-                  <span className="font-medium text-xs tracking-wider uppercase hidden sm:inline-block">Home</span>
+                  <div className="btn-glow" />
+                  <ArrowLeft className="relative z-10 w-4 h-4" />
+                  <span className="relative z-10 font-medium text-xs tracking-wider uppercase hidden sm:inline-block">Home</span>
                 </motion.button>
               </Link>
             </Magnetic>
@@ -393,9 +393,9 @@ export function FullChat() {
             >
               <Plus className="w-5 h-5" />
             </button>
-            <span className="font-display font-bold tracking-wider text-sm hidden sm:inline-block text-white/90">Velo Assistant</span>
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-velo-black flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-              <VeloLogo className="w-5 h-5 sm:w-6 sm:h-6" />
+            <span className="font-display font-bold tracking-wider text-sm hidden sm:inline-block text-white/90">Velo Concierge</span>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-white via-neutral-100 to-neutral-200 text-neutral-950 flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.4)] relative overflow-hidden border border-white/50">
+              <VeloLogo className="w-5 h-5 sm:w-6 sm:h-6 text-velo-black relative z-10" />
             </div>
           </div>
         </header>
@@ -417,10 +417,14 @@ export function FullChat() {
                     className={`w-9 h-9 sm:w-12 sm:h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
                       msg.role === "user"
                         ? "bg-white/10 text-white"
-                        : "bg-white text-velo-black shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                        : "bg-gradient-to-tr from-white via-neutral-100 to-neutral-200 text-neutral-950 border border-white/50 shadow-[0_0_25px_rgba(255,255,255,0.3)] relative overflow-hidden"
                     }`}
                   >
-                    {msg.role === "user" ? <User className="w-4 h-4 sm:w-5 sm:h-5" /> : <VeloLogo className="w-5 h-5 sm:w-6 sm:h-6" />}
+                    {msg.role === "user" ? (
+                      <User className="w-4 h-4 sm:w-5 sm:h-5" />
+                    ) : (
+                      <VeloLogo className="w-5 h-5 text-velo-black" />
+                    )}
                   </div>
                   <div
                     className={`px-5 py-3.5 sm:px-8 sm:py-5 rounded-[1.5rem] sm:rounded-[2rem] max-w-[85%] sm:max-w-[80%] text-sm sm:text-base leading-relaxed shadow-xl ${
@@ -441,8 +445,8 @@ export function FullChat() {
                 animate={{ opacity: 1, y: 0 }}
                 className="flex gap-4 flex-row"
               >
-                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white text-velo-black flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                  <VeloLogo className="w-5 h-5 sm:w-6 sm:h-6" />
+                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-gradient-to-tr from-white via-neutral-100 to-neutral-200 text-neutral-950 flex items-center justify-center flex-shrink-0 border border-white/50 shadow-[0_0_25px_rgba(255,255,255,0.3)] relative overflow-hidden">
+                  <VeloLogo className="w-5 h-5 sm:w-6 sm:h-6 text-velo-black relative z-10" />
                 </div>
                 <div className="px-6 py-4 sm:px-8 sm:py-6 rounded-[1.5rem] sm:rounded-[2rem] bg-white/5 border border-white/10 rounded-tl-sm backdrop-blur-md flex items-center gap-2">
                   <motion.div
@@ -484,9 +488,10 @@ export function FullChat() {
                   whileTap={{ scale: 0.95 }}
                   type="submit"
                   disabled={!input.trim() || isLoading}
-                  className="hover-target w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-white text-velo-black shadow-[0_0_30px_rgba(255,255,255,0.3)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="btn-premium hover-target w-12 h-12 sm:w-16 sm:h-16 !p-0 flex items-center justify-center rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
-                  <Send className="w-5 h-5 sm:w-6 sm:h-6 ml-0.5 sm:ml-1" />
+                  <div className="btn-glow" />
+                  <Send className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 ml-0.5 sm:ml-1" />
                 </motion.button>
               </Magnetic>
             </form>

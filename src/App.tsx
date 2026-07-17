@@ -20,6 +20,7 @@ import { SplashIntro } from './components/SplashIntro';
 import { MaintenanceGuard } from './components/MaintenanceGuard';
 import { ScrollToTop } from './components/ScrollToTop';
 import { SmoothScroll } from './components/SmoothScroll';
+import { StarryRain } from './components/StarryRain';
 
 
 
@@ -92,8 +93,14 @@ export default function App() {
           <CustomCursor />
           <ScrollToTop />
           <MaintenanceGuard>
-            <main className="min-h-screen bg-velo-black selection:bg-white/20 selection:text-white overflow-x-hidden">
-              {!showSplash && <AnimatedRoutes />}
+            <main className="min-h-screen bg-velo-black selection:bg-white/20 selection:text-white overflow-x-hidden relative">
+              {!showSplash && (
+                <>
+                  <div className="relative z-10">
+                    <AnimatedRoutes />
+                  </div>
+                </>
+              )}
             </main>
           </MaintenanceGuard>
         </Router>

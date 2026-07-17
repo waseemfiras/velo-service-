@@ -70,19 +70,20 @@ export function ContactFooter() {
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.02, x: 10 }}
                   whileTap={{ scale: 0.98 }}
-                  className="hover-target group flex items-center justify-between p-6 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                  className="card-premium hover-target group flex items-center justify-between p-6 rounded-3xl"
                 >
-                  <div className="flex items-center gap-6">
-                    <div className="w-14 h-14 rounded-full bg-velo-black flex items-center justify-center border border-white/10 group-hover:border-white/30 group-hover:scale-110 transition-all duration-500">
-                      <social.icon className="w-6 h-6 text-white/80" />
+                  <div className="btn-glow" />
+                  <div className="flex items-center gap-6 relative z-10">
+                    <div className="w-14 h-14 rounded-full bg-black/50 flex items-center justify-center border border-white/10 group-hover:bg-white group-hover:border-transparent transition-all duration-500">
+                      <social.icon className="w-6 h-6 text-white/80 group-hover:text-black transition-colors" />
                     </div>
                     <div>
                       <p className="text-sm text-white/50 mb-1 font-medium tracking-wider uppercase">{social.name}</p>
-                      <p className="font-medium text-xl tracking-wide group-hover:text-white transition-colors">{social.label}</p>
+                      <p className="font-medium text-xl tracking-wide text-white/80 group-hover:text-white transition-colors">{social.label}</p>
                     </div>
                   </div>
-                  <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white transition-colors duration-300">
-                    <ArrowUpRight className="w-5 h-5 text-white/30 group-hover:text-velo-black transition-colors" />
+                  <div className="relative z-10 w-12 h-12 rounded-full border border-white/10 bg-black/50 flex items-center justify-center group-hover:bg-white transition-colors duration-300">
+                    <ArrowUpRight className="w-5 h-5 text-white/50 group-hover:text-black transition-colors" />
                   </div>
                 </motion.a>
               </Magnetic>

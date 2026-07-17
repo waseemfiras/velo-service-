@@ -1031,9 +1031,10 @@ export function RequestService() {
                             toast.error(t('error_validation_toast'));
                           }
                         }}
-                        className="px-8 py-3 bg-white text-velo-black font-bold text-xs rounded-xl hover:bg-neutral-200 transition-colors cursor-none"
+                        className="btn-premium px-8 py-3 text-white font-bold text-xs cursor-none"
                       >
-                        {t('btn_review')}
+                        <div className="btn-glow" />
+                        <span className="relative z-10">{t('btn_review')}</span>
                       </button>
                     </div>
 
@@ -1140,17 +1141,18 @@ export function RequestService() {
                         id="form-btn-submit-final"
                         disabled={isSubmitting}
                         onClick={handleNewRequestSubmit}
-                        className="px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-black text-xs rounded-xl shadow-lg transition-all flex items-center gap-2 cursor-none disabled:opacity-50"
+                        className="btn-premium px-8 py-3.5 text-white font-black text-xs cursor-none disabled:opacity-50"
                       >
+                        <div className="btn-glow" />
                         {isSubmitting ? (
                           <>
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            {t('btn_submitting_request')}
+                            <Loader2 className="relative z-10 w-4 h-4 animate-spin" />
+                            <span className="relative z-10">{t('btn_submitting_request')}</span>
                           </>
                         ) : (
                           <>
-                            {t('btn_submit_request')}
-                            <CheckCircle2 className="w-4 h-4" />
+                            <span className="relative z-10">{t('btn_submit_request')}</span>
+                            <CheckCircle2 className="relative z-10 w-4 h-4" />
                           </>
                         )}
                       </button>

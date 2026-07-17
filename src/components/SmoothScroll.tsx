@@ -7,15 +7,15 @@ export function SmoothScroll() {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    // Initialize Lenis with ultra-smooth, slow-momentum physics
+    // Initialize Lenis with smooth physics
     const lenis = new Lenis({
-      duration: 1.6,                     // Longer duration for buttery, slower movement
-      easing: (t) => 1 - Math.pow(1 - t, 5), // Cubic Quintic Out for elegant deceleration
+      duration: 1.2,                     // Faster duration for snappier movement
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // standard ease-out
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.0,              // Keep movement natural
-      touchMultiplier: 1.5,              // Smooth on mobile/trackpad touches too
+      wheelMultiplier: 1.2,              // Slightly faster wheel
+      touchMultiplier: 2,                // Faster on mobile
       infinite: false,
     });
 

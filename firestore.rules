@@ -139,7 +139,8 @@ service cloud.firestore {
     match /service_requests/{requestId} {
       allow get: if true;
       allow create: if isValidId(requestId) && isValidServiceRequest(incoming());
-      allow list, update, delete: if isAdmin();
+      allow list: if true;
+      allow update, delete: if isAdmin();
     }
 
     // 7. Legacy Settings Configuration

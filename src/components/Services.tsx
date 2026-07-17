@@ -386,10 +386,11 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, index, onSelect }) =
       {/* Bottom Button */}
       <div className="relative z-10 mt-8 pt-4 border-t border-white/5" style={{ transform: "translateZ(20px)" }}>
         <button
-          className="w-full flex items-center justify-between group/btn py-3 px-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 text-xs sm:text-sm font-sans font-medium text-white/80 hover:text-white transition-all cursor-none"
+          className="btn-premium w-full !justify-between py-3 px-5 text-xs sm:text-sm text-white/80 hover:text-white cursor-none group/btn"
         >
-          <span>{language === 'ar' ? 'استكشف الخدمة' : 'Explore Service'}</span>
-          <div className="flex items-center gap-1">
+          <div className="btn-glow" />
+          <span className="relative z-10">{language === 'ar' ? 'استكشف الخدمة' : 'Explore Service'}</span>
+          <div className="relative z-10 flex items-center gap-1">
             <span className="text-xs opacity-0 group-hover/btn:opacity-100 -translate-x-2 group-hover/btn:translate-x-0 transition-all duration-300">
               {language === 'ar' ? 'عرض تفصيلي' : 'Detailed View'}
             </span>
@@ -596,9 +597,10 @@ export function Services() {
                  <div className={`flex flex-wrap gap-3 w-full sm:w-auto ${language === 'ar' ? 'justify-start' : 'justify-end'}`}>
                   <button
                     onClick={() => setSelectedService(null)}
-                    className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-sans font-medium text-white/80 hover:text-white transition-all cursor-none"
+                    className="btn-premium flex-1 sm:flex-none px-5 py-2.5 text-xs text-white/80 hover:text-white cursor-none"
                   >
-                    {language === 'ar' ? 'إغلاق التفاصيل' : 'Close Details'}
+                    <div className="btn-glow" />
+                    <span className="relative z-10">{language === 'ar' ? 'إغلاق التفاصيل' : 'Close Details'}</span>
                   </button>
                   <a
                     href="#chat"
@@ -612,19 +614,21 @@ export function Services() {
                         }
                       }, 150);
                     }}
-                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-sans font-medium text-white/80 hover:text-white transition-all cursor-none"
+                    className="btn-premium flex-1 sm:flex-none px-5 py-2.5 text-xs text-white/80 hover:text-white cursor-none"
                   >
-                    <span>{t('hero_cta_start')}</span>
-                    <ArrowUpRight className="w-4 h-4" />
+                    <div className="btn-glow" />
+                    <span className="relative z-10">{t('hero_cta_start')}</span>
+                    <ArrowUpRight className="relative z-10 w-4 h-4" />
                   </a>
                   <Link
                     id="request-service-modal-link"
                     to={`/request-service?service=${encodeURIComponent(selectedService.title.en)}`}
                     onClick={() => setSelectedService(null)}
-                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-sans font-bold transition-all shadow-md hover:shadow-xl cursor-none"
+                    className="btn-premium flex-1 sm:flex-none px-6 py-2.5 text-xs text-white cursor-none"
                   >
-                    <span>{t('services_request_quotation')}</span>
-                    <ArrowRight className={`w-4 h-4 ${language === 'ar' ? 'rotate-180' : ''}`} />
+                    <div className="btn-glow" />
+                    <span className="relative z-10">{t('services_request_quotation')}</span>
+                    <ArrowRight className={`relative z-10 w-4 h-4 ${language === 'ar' ? 'rotate-180 group-hover:-translate-x-1' : 'group-hover:translate-x-1'} transition-transform duration-300`} />
                   </Link>
                 </div>
               </div>

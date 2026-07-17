@@ -34,17 +34,13 @@ export function Navbar() {
   const daysLeft = getDaysLeft();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = scrollY.getPrevious() ?? 0;
-    if (latest > previous && latest > 150) {
-      setHidden(true);
+    // Keep navbar always visible, just update background if needed based on scroll
+    if (latest > 50) {
+      setHidden(false);
     } else {
       setHidden(false);
     }
   });
-
-  const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'ar' : 'en');
-  };
 
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
@@ -71,37 +67,24 @@ export function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: "-100%", opacity: 0 }}
+        initial={{ y: -100, opacity: 0 }}
         animate={hidden ? "hidden" : "visible"}
         variants={{
-          visible: { y: 0, opacity: 1 },
-          hidden: { y: "-100%", opacity: 0 },
+          visible: { y: 24, opacity: 1 },
+          hidden: { y: -100, opacity: 0 },
         }}
         transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-40 flex flex-col"
+        className="fixed top-0 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-4xl rounded-full bg-gradient-to-b from-[#222]/90 to-[#0a0a0a]/90 backdrop-blur-2xl border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_20px_60px_rgba(0,0,0,0.8)] flex items-center justify-between px-4 py-2"
       >
-        <div className="absolute inset-0 bg-velo-black/50 backdrop-blur-md border-b border-white/10" />
-        
-        {/* Main Navbar */}
-        <div className="relative px-6 py-4 flex items-center justify-between w-full max-w-7xl mx-auto">
           <Magnetic intensity={0.1}>
-            <Link to="/" className="font-display font-bold text-2xl tracking-tighter hover-target inline-block">
+            <Link to="/" className="font-display font-bold text-xl tracking-tighter hover-target inline-block">
               VELO<span className="text-white/50">SERVICE</span>
             </Link>
           </Magnetic>
           
-          <div className="hidden lg:flex items-center gap-5 px-5 py-2 bg-white/[0.03] border border-white/10 rounded-full backdrop-blur-md shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)] hover:border-white/20 transition-all duration-300">
+          <div className="hidden lg:flex items-center gap-6">
             <Magnetic intensity={0.2}>
-              <a 
-                href="/#services" 
-                onClick={(e) => handleAnchorClick(e, "services")} 
-                className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1"
-              >
-                {t('services')}
-              </a>
-            </Magnetic>
-            <Magnetic intensity={0.2}>
-              <Link to="/request-service" className="text-xs font-display font-medium text-emerald-400 hover:text-emerald-300 transition-colors hover-target px-2.5 py-1">
+              <Link to="/request-service" className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1">
                 {t('requestService')}
               </Link>
             </Magnetic>
@@ -115,24 +98,6 @@ export function Navbar() {
                 {t('aiChat')}
               </Link>
             </Magnetic>
-            <Magnetic intensity={0.2}>
-              <a 
-                href="/#work" 
-                onClick={(e) => handleAnchorClick(e, "work")} 
-                className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1"
-              >
-                {t('work')}
-              </a>
-            </Magnetic>
-            <Magnetic intensity={0.2}>
-              <a 
-                href="/#contact" 
-                onClick={(e) => handleAnchorClick(e, "contact")} 
-                className="text-xs font-display font-medium text-white/70 hover:text-white transition-colors hover-target px-2.5 py-1"
-              >
-                {t('contact')}
-              </a>
-            </Magnetic>
           </div>
 
           <div className="flex items-center gap-4">
@@ -140,31 +105,19 @@ export function Navbar() {
               <Magnetic intensity={0.3}>
                 <Link to="/request-service">
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="relative px-6 py-2.5 bg-white text-velo-black font-semibold text-xs sm:text-sm rounded-full overflow-hidden group shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-shadow hover-target"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="btn-premium px-6 py-2 text-white text-xs sm:text-sm hover-target"
                   >
+                    <div className="btn-glow" />
                     <span className="relative z-10">{language === 'ar' ? 'طلب مشروع' : 'Start Project'}</span>
-                    <div className="absolute inset-0 bg-white/80 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                   </motion.button>
                 </Link>
               </Magnetic>
             </div>
 
-            {/* Desktop Language Selector */}
-            <div className="hidden lg:block">
-              <Magnetic intensity={0.2}>
-                <button
-                  onClick={toggleLanguage}
-                  className="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/80 hover:text-white transition-colors flex items-center justify-center gap-1 hover-target px-3.5 py-1.5"
-                  title={language === 'ar' ? 'English' : 'العربية'}
-                >
-                  <Globe className="w-4 h-4" />
-                  <span className="text-xs font-semibold tracking-wider">{language === 'en' ? 'AR' : 'EN'}</span>
-                </button>
-              </Magnetic>
-            </div>
-            
+            {/* Desktop Auth and User Menu */}
             {!loading && (
               user ? (
                 <UserMenu 
@@ -200,8 +153,6 @@ export function Navbar() {
               {isMobileMenuOpen ? <CloseIcon className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
-        </div>
-        
       </motion.nav>
 
       {/* Floating Bottom Navigation Bar for Mobile */}
@@ -209,9 +160,9 @@ export function Navbar() {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.8, type: "spring" }}
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 lg:hidden w-[90%] max-w-sm"
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] lg:hidden w-[90%] max-w-sm"
       >
-        <div className="bg-velo-black/80 backdrop-blur-xl border border-white/10 rounded-full p-2 flex items-center justify-between shadow-[0_10px_40px_rgba(0,0,0,0.8)] shadow-black">
+        <div className="bg-gradient-to-b from-[#2a2a2a]/95 to-[#111111]/95 backdrop-blur-2xl border border-white/10 rounded-full p-2 flex items-center justify-between shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_20px_60px_rgba(0,0,0,0.8)]">
           <Link to="/chat" className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors relative group">
             <div className="relative">
               <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -220,19 +171,15 @@ export function Navbar() {
             <span className="text-[10px] font-medium">{t('aiChat')}</span>
           </Link>
           <div className="w-px h-8 bg-white/10" />
-          <Link to="/request-service" className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-emerald-400 hover:text-emerald-300 transition-colors">
+          <Link to="/request-service" className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
             <span className="text-[10px] font-medium">{t('requestService')}</span>
           </Link>
           <div className="w-px h-8 bg-white/10" />
-          <a 
-            href="/#contact" 
-            onClick={(e) => handleAnchorClick(e, "contact")} 
-            className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            <span className="text-[10px] font-medium">{t('contact')}</span>
-          </a>
+          <Link to="/founder" className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span className="text-[10px] font-medium">{language === 'ar' ? 'فريقنا' : 'Our Team'}</span>
+          </Link>
         </div>
       </motion.div>
 
@@ -256,80 +203,42 @@ export function Navbar() {
             </button>
             
             <div className="flex flex-col gap-5 mt-4">
-              {/* 1. Services */}
-              <a 
-                href="/#services" 
-                onClick={(e) => handleAnchorClick(e, "services")}
-                className="text-xl font-display font-semibold text-white/85 hover:text-white border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
-              >
-                <span className="text-sm text-white/40 font-mono">01/</span>
-                <span>{t('services')}</span>
-              </a>
-
-              {/* 2. Request Service */}
+              {/* 1. Request Service */}
               <Link 
                 to="/request-service" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-xl font-display font-semibold text-emerald-400 hover:text-emerald-300 border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
+                className="text-xl font-display font-semibold text-white/80 hover:text-white border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
               >
-                <span className="text-sm text-emerald-400/40 font-mono">02/</span>
+                <span className="text-sm text-white/40 font-mono">01/</span>
                 <span>{t('requestService')}</span>
               </Link>
 
-              {/* 3. Our Team */}
+              {/* 2. Our Team */}
               <Link 
                 to="/founder" 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-xl font-display font-semibold text-white/85 hover:text-white border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
               >
-                <span className="text-sm text-white/40 font-mono">03/</span>
+                <span className="text-sm text-white/40 font-mono">02/</span>
                 <span>{language === 'ar' ? 'فريقنا' : 'Our Team'}</span>
               </Link>
 
-              {/* 4. AI Chat */}
+              {/* 3. AI Chat */}
               <Link 
                 to="/chat" 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-xl font-display font-semibold text-white/85 hover:text-white border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
               >
-                <span className="text-sm text-white/40 font-mono">04/</span>
+                <span className="text-sm text-white/40 font-mono">03/</span>
                 <span>{t('aiChat')}</span>
               </Link>
-
-              {/* 5. Our Work */}
-              <a 
-                href="/#work" 
-                onClick={(e) => handleAnchorClick(e, "work")}
-                className="text-xl font-display font-semibold text-white/85 hover:text-white border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
-              >
-                <span className="text-sm text-white/40 font-mono">05/</span>
-                <span>{t('work')}</span>
-              </a>
-
-              {/* 6. Contact Us */}
-              <a 
-                href="/#contact" 
-                onClick={(e) => handleAnchorClick(e, "contact")}
-                className="text-xl font-display font-semibold text-white/85 hover:text-white border-b border-white/5 pb-3 flex items-center justify-between [direction:rtl]"
-              >
-                <span className="text-sm text-white/40 font-mono">06/</span>
-                <span>{t('contact')}</span>
-              </a>
             </div>
 
             <div className="flex flex-col gap-4 mt-auto pb-8">
-              {/* Language Switcher Button */}
-              <button
-                onClick={() => { toggleLanguage(); setIsMobileMenuOpen(false); }}
-                className="flex items-center justify-center gap-2 py-3.5 bg-white/5 border border-white/10 rounded-full text-white/90 hover:text-white transition-all font-medium text-sm"
-              >
-                <Globe className="w-4 h-4" />
-                <span>{language === 'en' ? 'تحويل للعربية' : 'Switch to English'}</span>
-              </button>
-
               <Link to="/request-service" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
-                <button className="w-full py-4 bg-white text-velo-black font-bold text-center rounded-full hover-target shadow-lg text-sm">
-                  {language === 'ar' ? 'طلب مشروع جديد' : 'Start Project'}
+                <button className="btn-premium w-full py-4 text-white font-bold text-center text-sm">
+                  <div className="btn-glow" />
+                  <span className="relative z-10">{language === 'ar' ? 'طلب مشروع جديد' : 'Start Project'}</span>
                 </button>
               </Link>
             </div>

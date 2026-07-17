@@ -284,12 +284,12 @@ export function Projects() {
             <Magnetic>
               <button 
                 onClick={() => setIsAllOpen(true)}
-                className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full border border-white/10 hover:border-white/40 transition-colors bg-white/[0.02] overflow-hidden"
+                className="btn-premium group px-8 py-3.5 text-white"
               >
-                <div className="absolute inset-0 bg-white translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1]" />
-                <Layers className="relative z-10 w-4 h-4 group-hover:text-black transition-colors" />
-                <span className="relative z-10 group-hover:text-black transition-colors font-semibold text-sm tracking-wide">View 20 Projects</span>
-                <ArrowUpRight className="relative z-10 w-4 h-4 group-hover:text-black transition-colors transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <div className="btn-glow" />
+                <Layers className="relative z-10 w-4 h-4 text-white group-hover:text-white transition-colors" />
+                <span className="relative z-10 text-white font-semibold text-sm tracking-wide">View 20 Projects</span>
+                <ArrowUpRight className="relative z-10 w-4 h-4 text-white group-hover:text-white transition-colors transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </button>
             </Magnetic>
           </motion.div>
@@ -618,11 +618,11 @@ export function Projects() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
                     onClick={() => setIsAllOpen(false)}
-                    className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-full border border-white/10 hover:border-white/40 transition-all duration-300 bg-white/[0.02] overflow-hidden shadow-xl hover:shadow-white/[0.02]"
+                    className="btn-premium group px-10 py-4 text-white shadow-xl"
                   >
-                    <div className="absolute inset-0 bg-white translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1]" />
-                    <ArrowLeft className="relative z-10 w-4 h-4 group-hover:text-black transition-colors transform group-hover:-translate-x-1 transition-transform" />
-                    <span className="relative z-10 group-hover:text-black transition-colors font-semibold text-sm tracking-wide">إغلاق المعرض والعودة / Close & Go Back</span>
+                    <div className="btn-glow" />
+                    <ArrowLeft className="relative z-10 w-4 h-4 text-white transition-colors transform group-hover:-translate-x-1" />
+                    <span className="relative z-10 text-white font-semibold text-sm tracking-wide">إغلاق المعرض والعودة / Close & Go Back</span>
                   </motion.button>
                 </div>
               )}

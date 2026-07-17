@@ -1,4 +1,4 @@
-import { MessageSquare, X, Send, User, Minimize2, ChevronDown, Menu, Trash2, Edit2, Check, Plus, Maximize2 } from "lucide-react";
+import { MessageSquare, X, Send, User, Minimize2, ChevronDown, Menu, Trash2, Edit2, Check, Plus, Maximize2, Sparkles } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
@@ -72,7 +72,7 @@ export function Chatbot() {
         {
           id: "1",
           role: "assistant",
-          content: "Hello! I am the Velo Service AI assistant. How can I help you today?",
+          content: "Welcome! I am Velo, your premium digital concierge. Let's design and build your next masterpiece. How can I elevate your vision today?",
         },
       ],
       selectedModel: "vgpt-1.5",
@@ -111,7 +111,7 @@ export function Chatbot() {
             {
               id: "1",
               role: "assistant",
-              content: "Hello! I am the Velo Service AI assistant. How can I help you today?",
+              content: "Welcome! I am Velo, your premium digital concierge. Let's design and build your next masterpiece. How can I elevate your vision today?",
             },
           ],
           selectedModel: "vgpt-1.5",
@@ -504,10 +504,14 @@ export function Chatbot() {
                     className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                       msg.role === "user"
                         ? "bg-white/10 text-white"
-                        : "bg-white text-velo-black shadow-md"
+                        : "bg-gradient-to-tr from-white via-neutral-100 to-neutral-200 text-neutral-950 border border-white/50 shadow-[0_0_15px_rgba(255,255,255,0.4)] relative overflow-hidden"
                     }`}
                   >
-                    {msg.role === "user" ? <User className="w-4 h-4" /> : <VeloLogo className="w-4 h-4" />}
+                    {msg.role === "user" ? (
+                      <User className="w-4 h-4" />
+                    ) : (
+                      <VeloLogo className="w-4 h-4 text-velo-black" />
+                    )}
                   </div>
                   <div
                     className={`px-5 py-3 rounded-3xl max-w-[80%] text-sm leading-relaxed ${
@@ -526,8 +530,8 @@ export function Chatbot() {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex gap-3 flex-row"
                 >
-                  <div className="w-8 h-8 rounded-full bg-white text-velo-black flex items-center justify-center flex-shrink-0 shadow-md">
-                    <VeloLogo className="w-4 h-4" />
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-white via-neutral-100 to-neutral-200 text-neutral-950 flex items-center justify-center flex-shrink-0 border border-white/50 shadow-[0_0_15px_rgba(255,255,255,0.4)] relative overflow-hidden">
+                    <VeloLogo className="w-4 h-4 text-velo-black relative z-10" />
                   </div>
                   <div className="px-5 py-4 rounded-3xl bg-white/5 border border-white/10 rounded-tl-sm backdrop-blur-md flex items-center gap-1.5">
                     <motion.div

@@ -66,28 +66,33 @@ export function SettingsPage() {
     setError('');
     setSuccess('');
 
+    const isAr = language === 'ar';
+
     if (!user) {
-      setError('Please log in first to change your password.');
+      setError(isAr ? 'يرجى تسجيل الدخول أولاً لتغيير كلمة المرور.' : 'Please log in first to change your password.');
       return;
     }
 
     if (!oldPassword || !newPassword || !confirmPassword) {
-      setError('Please fill in all required fields.');
+      setError(isAr ? 'يرجى ملء جميع الحقول المطلوبة.' : 'Please fill in all required fields.');
       return;
     }
 
     if (newPassword.length < 6) {
-      setError('The new password must be at least 6 characters long.');
+      setError(isAr ? 'يجب أن تتكون كلمة المرور الجديدة من 6 أحرف على الأقل.' : 'The new password must be at least 6 characters long.');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError('The new password and confirmation do not match.');
+      setError(isAr ? 'كلمة المرور الجديدة وتأكيدها غير متطابقين.' : 'The new password and confirmation do not match.');
       return;
     }
 
     if (strengthScore < 3) {
-      setError('Please choose a stronger password containing numbers, letters, and special symbols.');
+      setError(isAr 
+        ? 'يرجى اختيار كلمة مرور أقوى تحتوي على أرقام وحروف ورموز خاصة.' 
+        : 'Please choose a stronger password containing numbers, letters, and special symbols.'
+      );
       return;
     }
 
@@ -96,16 +101,39 @@ export function SettingsPage() {
 
     try {
       if (!token) {
-        throw new Error('You are not authorized to perform this action.');
+        throw new Error(isAr ? 'غير مصرح لك بالقيام بهذا الإجراء.' : 'You are not authorized to perform this action.');
       }
+
+      // 1. Interacts with the secure backend change-password endpoint
+      const response = await fetch('/auth/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          oldPassword,
+          newPassword
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || (isAr ? 'فشل تحديث كلمة المرور على الخادم.' : 'Failed to update password on the server.'));
+      }
+
+      // 2. Sync with local client auth storage to maintain offline/caching compatibility
       await localChangePassword(token, oldPassword, newPassword);
 
-      setSuccess('Password updated successfully and securely!');
+      setSuccess(isAr 
+        ? 'تم تحديث كلمة المرور بنجاح وبشكل آمن على الخادم وقاعدة البيانات المحلية!' 
+        : 'Password updated successfully and securely on both server and local cache!'
+      );
       setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (err: any) {
-      setError(err.message || 'Failed to change password, please try again later.');
+      setError(err.message || (isAr ? 'فشل تغيير كلمة المرور، يرجى المحاولة لاحقاً.' : 'Failed to change password, please try again later.'));
     } finally {
       setLoading(false);
     }
