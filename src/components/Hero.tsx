@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, useMotionValue, useSpring, useVelocity } from "motion/react";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { TextReveal } from "./TextReveal";
@@ -70,32 +70,30 @@ const generatedScreens = [
 ];
 
 function FloatingScreen({ screen, mouseX, mouseY }: { screen: any, mouseX: any, mouseY: any }) {
+  // Only apply mouse parallax if we have a fine pointer (mouse)
+  const isFinePointer = typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches;
+  
   const xTransform = useTransform(mouseX, [0, typeof window !== 'undefined' ? window.innerWidth : 1000], [-screen.xOffset, screen.xOffset]);
   const yTransform = useTransform(mouseY, [0, typeof window !== 'undefined' ? window.innerHeight : 1000], [-screen.yOffset, screen.yOffset]);
 
-  const velocityX = useVelocity(xTransform);
-  const velocityY = useVelocity(yTransform);
+  // Use static values on touch devices to avoid heavy calculation
+  const finalX = isFinePointer ? xTransform : 0;
+  const finalY = isFinePointer ? yTransform : 0;
 
-  const filter = useTransform(() => {
-    const vx = velocityX.get() || 0;
-    const vy = velocityY.get() || 0;
-    const speed = Math.sqrt(vx * vx + vy * vy);
-    const blurAmount = Math.min(speed / 40, 5); // Tweak divisor to adjust blur intensity
-    return blurAmount > 0.05 ? `blur(${blurAmount}px)` : "blur(0px)";
-  });
+  // Reduced lag: Disabled expensive useVelocity and dynamic filter: blur().
+  // Relying on the spring animation and parallax for movement instead.
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 100, scale: 0.8 }}
       animate={{ opacity: screen.opacity || 1, y: 0, scale: 1 }}
       transition={{ duration: 1.5, delay: screen.delay, type: "spring", stiffness: 100 }}
-      style={{ x: xTransform, y: yTransform }}
+      style={{ x: finalX, y: finalY }}
       className={`absolute rounded-xl overflow-hidden border border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.6)] ${screen.className} will-change-transform`}
     >
       <motion.div 
         animate={{ y: [0, -10, 0] }}
         transition={{ duration: 8 + screen.delay * 2, repeat: Infinity, ease: "easeInOut", repeatType: "reverse" }}
-        style={{ filter }}
         className="w-full h-full relative group will-change-transform"
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
@@ -115,27 +113,33 @@ function FloatingScreens() {
   const smoothMouseY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
-    let animationFrameId: number;
-    const handleMouseMove = (e: MouseEvent) => {
-      animationFrameId = requestAnimationFrame(() => {
-        mouseX.set(e.clientX);
-        mouseY.set(e.clientY);
-      });
-    };
-    
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      cancelAnimationFrame(animationFrameId);
-    };
+    // Only attach mousemove on non-touch devices to save performance
+    if (typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches) {
+      let animationFrameId: number;
+      const handleMouseMove = (e: MouseEvent) => {
+        animationFrameId = requestAnimationFrame(() => {
+          mouseX.set(e.clientX);
+          mouseY.set(e.clientY);
+        });
+      };
+      
+      window.addEventListener("mousemove", handleMouseMove, { passive: true });
+      
+      return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+        cancelAnimationFrame(animationFrameId);
+      };
+    }
   }, [mouseX, mouseY]);
 
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none hidden lg:block overflow-hidden" style={{ perspective: "1000px" }}>
-      {generatedScreens.map((screen, idx) => (
-        <FloatingScreen key={idx} screen={screen} mouseX={smoothMouseX} mouseY={smoothMouseY} />
-      ))}
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" style={{ perspective: "1000px" }}>
+      {/* On mobile, scale down the whole container to fit screens */}
+      <div className="absolute inset-0 scale-[0.4] sm:scale-[0.6] lg:scale-100 origin-center sm:origin-top lg:origin-center top-32 lg:top-0">
+        {generatedScreens.map((screen, idx) => (
+          <FloatingScreen key={idx} screen={screen} mouseX={smoothMouseX} mouseY={smoothMouseY} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -174,7 +178,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
         {/* Noise Texture */}
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%221%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
 
         {/* Dynamic, luxurious ambient lighting orbs pulsing in the background */}
         <motion.div

@@ -17,14 +17,12 @@ export function TextReveal({ text, className = "", delay = 0 }: { text: string, 
       opacity: 0,
       y: 40,
       scale: 0.95,
-      filter: "blur(10px)",
       rotateX: -20,
     },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      filter: "blur(0px)",
       rotateX: 0,
       transition: {
         type: "spring",
@@ -51,7 +49,7 @@ export function TextReveal({ text, className = "", delay = 0 }: { text: string, 
               variants={child}
               key={letterIndex}
               className="inline-block origin-bottom"
-              style={{ willChange: "transform, filter, opacity" }}
+              style={{ willChange: "transform, opacity" }}
             >
               {letter}
             </motion.span>

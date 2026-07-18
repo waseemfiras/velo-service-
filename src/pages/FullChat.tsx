@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Send, User, ArrowLeft, ChevronDown, Menu, Trash2, Edit2, Check, Plus, X, MessageSquare, Sparkles } from "lucide-react";
+import { Send, User, ArrowLeft, ArrowRight, ChevronDown, Menu, Trash2, Edit2, Check, Plus, X, MessageSquare, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Magnetic } from "../components/Magnetic";
 import { TextReveal } from "../components/TextReveal";
@@ -14,6 +14,7 @@ import { getApiUrl } from "../lib/apiUrl";
 export function FullChat() {
   const { canSendMessage, incrementUsage } = useChatLimits();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [showVgptIntro, setShowVgptIntro] = useState(true);
   
   const { sessions, setSessions, currentSessionId, setCurrentSessionId, isLoading: sessionsLoading } = useChatSessions();
 
@@ -220,6 +221,68 @@ export function FullChat() {
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 bg-velo-black flex overflow-hidden"
     >
+      <AnimatePresence>
+        {showVgptIntro && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 1.1, filter: "blur(20px)", transition: { duration: 0.8, ease: "easeInOut" } }}
+            className="absolute inset-0 z-[100] flex items-center justify-center bg-velo-black overflow-hidden"
+          >
+            {/* Background elements */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/5 via-velo-black to-velo-black" />
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: [0.8, 1.2, 1], opacity: [0, 1, 1] }}
+              transition={{ duration: 2, ease: "easeOut" }}
+              className="absolute w-96 h-96 bg-white/5 blur-[100px] rounded-full pointer-events-none"
+            />
+
+            <motion.div
+              className="relative flex flex-col items-center justify-center z-10"
+            >
+              <h1 className="flex text-7xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white/80 to-white/40 tracking-[0.2em] uppercase mix-blend-plus-lighter drop-shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                {["V", "G", "P", "T"].map((letter, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    transition={{ delay: i * 0.15 + 0.5, duration: 1, ease: [0.2, 0.65, 0.3, 0.9] }}
+                    className="inline-block"
+                  >
+                    {letter}
+                  </motion.span>
+                ))}
+              </h1>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.5, duration: 1 }}
+                className="mt-6 flex flex-col items-center gap-8 text-white/70"
+              >
+                <div className="flex items-center gap-3">
+                  <Sparkles className="w-5 h-5 text-white/50" />
+                  <span className="font-mono text-sm tracking-widest uppercase">The Ultimate AI Model</span>
+                </div>
+                
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowVgptIntro(false)}
+                  className="btn-premium group px-8 py-3.5 text-white shadow-xl mt-4 cursor-none flex items-center gap-2"
+                >
+                  <span className="btn-glow"></span>
+                  <span className="relative z-10 flex items-center gap-2 font-mono text-sm uppercase tracking-widest">
+                    Enter Chat
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </motion.button>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Sidebar Overlay for Mobile */}
       <AnimatePresence>
         {isSidebarOpen && window.innerWidth < 1024 && (
@@ -309,6 +372,17 @@ export function FullChat() {
                 </div>
               ))}
             </div>
+
+            <div className="p-4 border-t border-white/5 flex flex-col gap-2">
+              <Link to="/request-service" className="flex items-center gap-3 px-3 py-2.5 text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <Sparkles className="w-4 h-4" />
+                <span className="text-sm font-medium">Premium Services</span>
+              </Link>
+              <Link to="/founder" className="flex items-center gap-3 px-3 py-2.5 text-white/60 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <User className="w-4 h-4" />
+                <span className="text-sm font-medium">Our Team</span>
+              </Link>
+            </div>
           </motion.aside>
         )}
       </AnimatePresence>
@@ -344,7 +418,7 @@ export function FullChat() {
               onClick={() => setShowModelDropdown(!showModelDropdown)}
               className="flex items-center gap-2.5 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-xs font-medium text-white/90 hover:bg-white/10 transition-colors cursor-pointer"
             >
-              <span>{selectedModel === "vgpt-1.5" ? "VGPT-1.5 (Velo)" : selectedModel === "vgpt-2.0-lite" ? "VGPT-2.0 LITE" : "Gemini 3.5 Flash"}</span>
+              <span>{selectedModel === "vgpt-1.5" ? "VGPT-1.5 (Velo)" : selectedModel === "vgpt-2.0-lite" ? "VGPT-2.0 LITE" : "VGPT-3.0 PRO"}</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showModelDropdown ? "rotate-180" : ""}`} />
             </button>
             
@@ -377,7 +451,7 @@ export function FullChat() {
                     onClick={() => { setSelectedModel("gemini-3.5-flash"); setShowModelDropdown(false); }}
                     className={`w-full text-left px-3 py-2.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer flex flex-col gap-1 ${selectedModel === "gemini-3.5-flash" ? "bg-white/5 text-white" : "text-white/70"}`}
                   >
-                    <span className="text-xs font-medium">Gemini 3.5 Flash</span>
+                    <span className="text-xs font-medium">VGPT-3.0 PRO</span>
                     <span className="text-[10px] text-white/50 leading-relaxed">Fast and versatile model for general questions and coding.</span>
                   </button>
                 </motion.div>

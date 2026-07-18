@@ -26,7 +26,7 @@ const featuredProjects = [
     title: "AI Chat Integration",
     category: "API & Backend",
     year: "2025",
-    tags: ["Gemini API", "Express", "Vite"],
+    tags: ["Velo AI API", "Express", "Vite"],
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1200",
   },
   {
@@ -78,7 +78,7 @@ const allProjectsList = [
     title: "AI Chat Integration",
     category: "API & Backend",
     year: "2025",
-    tags: ["Gemini API", "Express", "Vite"],
+    tags: ["Velo AI API", "Express", "Vite"],
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800",
   },
   {
@@ -367,21 +367,18 @@ export function Projects() {
                     opacity: 0, 
                     scale: 1.25, 
                     rotate: -1,
-                    filter: "blur(20px)",
                     clipPath: "inset(12% 12% 12% 12% round 40px)" 
                   }}
                   animate={{ 
                     opacity: 1, 
                     scale: 1, 
                     rotate: 0,
-                    filter: "blur(0px)",
                     clipPath: "inset(0% 0% 0% 0% round 24px)" 
                   }}
                   exit={{ 
                     opacity: 0, 
                     scale: 0.85, 
                     rotate: 1,
-                    filter: "blur(20px)",
                     clipPath: "inset(12% 12% 12% 12% round 40px)" 
                   }}
                   transition={{ 

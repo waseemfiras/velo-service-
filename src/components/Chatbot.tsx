@@ -445,7 +445,7 @@ export function Chatbot() {
                   onClick={() => setShowModelDropdown(!showModelDropdown)}
                   className="flex items-center justify-between w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium text-white/80 hover:text-white hover:bg-black/60 transition-colors cursor-pointer"
                 >
-                  <span>Model: {selectedModel === "vgpt-1.5" ? "VGPT-1.5 (Velo Trained)" : selectedModel === "vgpt-2.0-lite" ? "VGPT-2.0 LITE" : "Gemini 3.5 Flash"}</span>
+                  <span>Model: {selectedModel === "vgpt-1.5" ? "VGPT-1.5 (Velo Trained)" : selectedModel === "vgpt-2.0-lite" ? "VGPT-2.0 LITE" : "VGPT-3.0 PRO"}</span>
                   <ChevronDown className={`w-4 h-4 transition-transform ${showModelDropdown ? "rotate-180" : ""}`} />
                 </button>
                 
@@ -480,7 +480,7 @@ export function Chatbot() {
                         onClick={() => { setSelectedModel("gemini-3.5-flash"); setShowModelDropdown(false); }}
                         className={`w-full text-left px-3 py-2.5 rounded-md hover:bg-white/10 transition-colors cursor-pointer flex flex-col gap-1 ${selectedModel === "gemini-3.5-flash" ? "bg-white/5 text-white" : "text-white/70"}`}
                       >
-                        <span className="text-xs font-medium">Gemini 3.5 Flash</span>
+                        <span className="text-xs font-medium">VGPT-3.0 PRO</span>
                         <span className="text-[10px] text-white/50 leading-relaxed">Fast and versatile model for general questions and coding.</span>
                       </button>
                     </motion.div>

@@ -21,8 +21,7 @@ import { MaintenanceGuard } from './components/MaintenanceGuard';
 import { ScrollToTop } from './components/ScrollToTop';
 import { SmoothScroll } from './components/SmoothScroll';
 import { StarryRain } from './components/StarryRain';
-
-
+import { WelcomeTour } from './components/WelcomeTour';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -33,9 +32,9 @@ function AnimatedRoutes() {
       <motion.div 
         key={location.pathname} 
         className="min-h-screen"
-        initial={{ opacity: 0, filter: "blur(10px)", scale: 0.98 }}
-        animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-        exit={{ opacity: 0, filter: "blur(10px)", scale: 1.02 }}
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 1.02 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <Routes location={location}>
@@ -93,6 +92,7 @@ export default function App() {
           <CustomCursor />
           <ScrollToTop />
           <MaintenanceGuard>
+            <WelcomeTour />
             <main className="min-h-screen bg-velo-black selection:bg-white/20 selection:text-white overflow-x-hidden relative">
               {!showSplash && (
                 <>

@@ -57,9 +57,12 @@ export function CustomCursor() {
     setIsVisible(true);
     document.body.classList.add('custom-cursor-active');
 
+    let animationFrameId: number;
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
+      animationFrameId = requestAnimationFrame(() => {
+        mouseX.set(e.clientX);
+        mouseY.set(e.clientY);
+      });
     };
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -100,6 +103,7 @@ export function CustomCursor() {
       window.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseleave', handleMouseLeaveWindow);
       document.removeEventListener('mouseenter', handleMouseEnterWindow);
+      cancelAnimationFrame(animationFrameId);
     };
   }, [mouseX, mouseY]);
 

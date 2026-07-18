@@ -33,12 +33,14 @@ export function Navbar() {
 
   const daysLeft = getDaysLeft();
 
+  const [isBottomBarHidden, setIsBottomBarHidden] = useState(false);
+
   useMotionValueEvent(scrollY, "change", (latest) => {
-    // Keep navbar always visible, just update background if needed based on scroll
-    if (latest > 50) {
-      setHidden(false);
-    } else {
-      setHidden(false);
+    const previous = scrollY.getPrevious() || 0;
+    if (latest > previous && latest > 150) {
+      setIsBottomBarHidden(true);
+    } else if (latest < previous) {
+      setIsBottomBarHidden(false);
     }
   });
 
@@ -158,32 +160,43 @@ export function Navbar() {
       </motion.nav>
 
       {/* Floating Bottom Navigation Bar for Mobile */}
-      <motion.div 
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.8, type: "spring" }}
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] lg:hidden w-[90%] max-w-sm"
-      >
-        <div className="bg-gradient-to-b from-[#2a2a2a]/95 to-[#111111]/95 backdrop-blur-2xl border border-white/10 rounded-full p-2 flex items-center justify-between shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_20px_60px_rgba(0,0,0,0.8)]">
-          <Link to="/chat" className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors relative group">
-            <div className="relative">
-              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
-            </div>
-            <span className="text-[10px] font-medium">{t('aiChat')}</span>
+      <AnimatePresence>
+        {!isBottomBarHidden && (
+          <motion.div 
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 150, opacity: 0 }}
+            transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] lg:hidden w-[90%] max-w-sm"
+          >
+            <div className="bg-gradient-to-b from-[#2a2a2a]/95 to-[#111111]/95 backdrop-blur-2xl border border-white/10 rounded-full p-2 flex items-center justify-between shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_20px_60px_rgba(0,0,0,0.8)]">
+          <Link to="/chat" className="flex-1 relative group">
+            <motion.div whileTap={{ scale: 0.9 }} className="flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors w-full h-full">
+              <div className="relative">
+                <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
+              </div>
+              <span className="text-[10px] font-medium">{t('aiChat')}</span>
+            </motion.div>
           </Link>
           <div className="w-px h-8 bg-white/10" />
-          <Link to="/request-service" className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
-            <span className="text-[10px] font-medium">{t('requestService')}</span>
+          <Link to="/request-service" className="flex-1">
+            <motion.div whileTap={{ scale: 0.9 }} className="flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors w-full h-full">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+              <span className="text-[10px] font-medium">{t('requestService')}</span>
+            </motion.div>
           </Link>
           <div className="w-px h-8 bg-white/10" />
-          <Link to="/founder" className="flex-1 flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <span className="text-[10px] font-medium">{language === 'ar' ? 'فريقنا' : 'Our Team'}</span>
+          <Link to="/founder" className="flex-1">
+            <motion.div whileTap={{ scale: 0.9 }} className="flex flex-col items-center justify-center gap-1 py-2 text-white/70 hover:text-white transition-colors w-full h-full">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span className="text-[10px] font-medium">{language === 'ar' ? 'فريقنا' : 'Our Team'}</span>
+            </motion.div>
           </Link>
         </div>
-      </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Mobile Menu Drawer */}
       <AnimatePresence>
