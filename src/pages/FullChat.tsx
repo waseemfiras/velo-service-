@@ -10,11 +10,38 @@ import { useChatLimits } from "../hooks/useChatLimits";
 import { AuthModal } from "../components/AuthModal";
 import { useChatSessions, ModelType, ChatMessage, ChatSession } from "../hooks/useChatSessions";
 import { getApiUrl } from "../lib/apiUrl";
+import { useAuth } from "../contexts/AuthContext";
 
 export function FullChat() {
   const { canSendMessage, incrementUsage } = useChatLimits();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [showVgptIntro, setShowVgptIntro] = useState(true);
+  const { user } = useAuth();
+  
+  const [showVgptIntro, setShowVgptIntro] = useState(() => {
+    try {
+      const lastUser = localStorage.getItem('velo_last_logged_in_user') || 'guest';
+      return localStorage.getItem(`velo_has_seen_vgpt_intro_${lastUser}`) !== 'true';
+    } catch {
+      return true;
+    }
+  });
+
+  useEffect(() => {
+    const userId = user ? (user.uid || user.email || 'guest') : 'guest';
+    localStorage.setItem('velo_last_logged_in_user', userId);
+    const hasSeen = localStorage.getItem(`velo_has_seen_vgpt_intro_${userId}`);
+    if (hasSeen === "true") {
+      setShowVgptIntro(false);
+    } else {
+      setShowVgptIntro(true);
+    }
+  }, [user]);
+
+  const handleEnterChat = () => {
+    setShowVgptIntro(false);
+    const userId = user ? (user.uid || user.email || 'guest') : 'guest';
+    localStorage.setItem(`velo_has_seen_vgpt_intro_${userId}`, 'true');
+  };
   
   const { sessions, setSessions, currentSessionId, setCurrentSessionId, isLoading: sessionsLoading } = useChatSessions();
 
@@ -268,7 +295,7 @@ export function FullChat() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowVgptIntro(false)}
+                  onClick={handleEnterChat}
                   className="btn-premium group px-8 py-3.5 text-white shadow-xl mt-4 cursor-none flex items-center gap-2"
                 >
                   <span className="btn-glow"></span>
